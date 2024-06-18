@@ -56,7 +56,7 @@ public class User implements UserDetails {
         if (role == null || role.isEmpty()) {
             if (this.userGroup.toLowerCase().trim().equals("coordinateur"))
                 role = "USER";
-            if (this.userGroup.toLowerCase().trim().equals("abes"))
+            if (this.userGroup.toLowerCase().trim().equals("abes") || this.userGroup.trim().equals("M1999"))
                 role = "ADMIN";
         }
         return this.role;
