@@ -7,15 +7,22 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
+import org.springframework.core.env.Environment;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 
 @SpringBootApplication
 public class ModifDeMasseApplication extends SpringBootServletInitializer {
+    private static Environment env;
+
+    public ModifDeMasseApplication(Environment environment) {
+        env = environment;
+    }
 
 	@Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -24,6 +31,21 @@ public class ModifDeMasseApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
 	    SpringApplication.run(ModifDeMasseApplication.class, args);
+        System.out.println("App launched." +
+                " | Env:" + Arrays.toString(env.getActiveProfiles()) +
+                " | Port:" + env.getProperty("server.port") +
+                " | Module:" + "web"
+
+        );
+        System.out.println("Connected to." +
+                " | BDD:" + env.getProperty("spring.datasource.item.jdbcurl") +
+                " | XMLBase:" + env.getProperty("spring.datasource.basexml.jdbcurl")
+
+        );
+        System.out.println("Level of log." +
+                " | App: " + env.getProperty("logging.level.fr.abes") +
+                " | Spring: " + env.getProperty("logging.level.root")
+        );
     }
 
     @Bean
