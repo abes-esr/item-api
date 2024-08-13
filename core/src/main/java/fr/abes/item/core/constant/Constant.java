@@ -187,6 +187,7 @@ public class Constant implements Serializable {
 	public static final String JOB_TRAITER_LIGNE_FICHIER_START_MODIF = "debut du job jobTraiterLigneFichier pour demandes de modification...";
 	public static final String JOB_TRAITER_LIGNE_FICHIER_START_EXEMP = "debut du job jobTraiterLigneFichier pour demandes d'exemplarisation...";
 	public static final String JOB_TRAITER_LIGNE_FICHIER_START_RECOU = "debut du job jobTraiterLigneFichier pour demandes de recouvrement...";
+	public static final String JOB_TRAITER_LIGNE_FICHIER_START_SUPPR = "debut du job jobTraiterLigneFichier pour demandes de suppression...";
 	public static final String JOB_EXPORT_STATISTIQUES_START = "debut du job jobExportStatistiques...";
 	public static final String SPRING_BATCH_TOTAL_TIME_EXECUTION_MILLISECONDS = "temps total execution (ms) = ";
 	public static final String SPRING_BATCH_TOTAL_TIME_EXECUTION_MINUTES = "temps total execution (minutes) = ";
@@ -204,9 +205,11 @@ public class Constant implements Serializable {
 	public static final String ERROR_PASSERENCOURS_FROM_GETNEXTDEMANDEEXEMPTASKLET = "erreur lors du passerEnCours de GetNextDemandeExempTasklets = ";
 	public static final String ERROR_PASSERENCOURS_FROM_GETNEXTDEMANDEMODIFTASKLET = "erreur lors du passerEnCours de GetNextDemandeModifTasklets = ";
 	public static final String ERROR_PASSERENCOURS_FROM_GETNEXTDEMANDERECOUVTASKLET = "erreur lors du passerEnCours de GetNextDemandeRecouvTasklets = ";
+	public static final String ERROR_PASSERENCOURS_FROM_GETNEXTDEMANDESUPPRTASKLET = "erreur lors du passerEnCours de GetNextDemandeRecouvTasklets = ";
 	public static final String ENTER_EXECUTE_FROM_GETNEXTDEMANDERECOUVTASKLET = "entrée dans execute de GetNextDemandeRecouvTasklets...";
 	public static final String ENTER_EXECUTE_FROM_GETNEXTDEMANDEMODIFTASKLET = "entrée dans execute de GetNextDemandeModifTasklets...";
 	public static final String ENTER_EXECUTE_FROM_GETNEXTDEMANDEEXEMPTASKLET = "entrée dans execute de GetNextDemandeExempTasklets...";
+	public static final String ENTER_EXECUTE_FROM_GETNEXTDEMANDESUPPRTASKLET = "entrée dans execute de GetNextDemandeSupprTasklets...";
 	public static final String ENTER_EXECUTE_FROM_GETNEXTDEMANDEEXEMPTOARCHIVETASKLET = "entrée dans execute de ChangeInArchivedStatusAllDemandesExempFinishedForMoreThanThreeMonthsTasklet...";
 	public static final String ENTER_EXECUTE_FROM_GETNEXTDEMANDEEXEMPTODELETEDSTATUSTASKLET = "entrée dans execute de ChangeInDeletedStatusAllDemandesExempFinishedForMoreThanThreeMonthsTasklet...";
 	public static final String ENTER_EXECUTE_FROM_LIRELIGNEFICHIERTASKLET = "entrée dans execute de LireLigneFichierTasklet...";

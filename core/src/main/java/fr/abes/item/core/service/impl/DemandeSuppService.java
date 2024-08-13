@@ -202,6 +202,9 @@ public class DemandeSuppService extends DemandeService implements IDemandeServic
 
     @Override
     public Demande getIdNextDemandeToProceed(int minHour, int maxHour) {
+        List<DemandeSupp> demandes = demandeSuppDao.findAllWaitingDemandes();
+        if (!demandes.isEmpty())
+            return demandes.get(0);
         return null;
     }
 

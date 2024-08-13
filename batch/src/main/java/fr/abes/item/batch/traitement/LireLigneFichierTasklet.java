@@ -84,6 +84,8 @@ public class LireLigneFichierTasklet implements Tasklet, StepExecutionListener {
                         case RECOUV:
                             this.lignesFichier.add(new LigneFichierDtoRecouv((LigneFichierRecouv) localLigne));
                             break;
+                        case SUPP:
+                            //TODO this.lignesFichier.add(new LigneFichierDtoSuppr((LigneFichierSupp) localLigne));
                         default:
                     }
                 }

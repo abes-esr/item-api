@@ -101,6 +101,8 @@ public class JobConfiguration {
     @Bean
     public Tasklet getNextDemandeRecouvTasklet() { return new GetNextDemandeRecouvTasklet(strategyFactory, minHour, maxHour); }
     @Bean
+    public Tasklet getNextDemandeSupprTasklet() { return new GetNextDemandeSupprTasklet(strategyFactory, minHour, maxHour); }
+    @Bean
     public Tasklet lireLigneFichierTasklet() { return new LireLigneFichierTasklet(strategyFactory, mailAdmin); }
     @Bean
     public Tasklet authentifierSurSudocTasklet()
@@ -179,6 +181,13 @@ public class JobConfiguration {
                 .tasklet(tasklet, transactionManager)
                 .build();
     }
+    @Bean
+    public Step stepRecupererNextDemandeSuppr(JobRepository jobRepository, @Qualifier("getNextDemandeSupprTasklet") Tasklet tasklet, PlatformTransactionManager transactionManager) {
+        return new StepBuilder("stepRecupererNextDemandeSuppr", jobRepository).allowStartIfComplete(true)
+                .tasklet(tasklet, transactionManager)
+                .build();
+    }
+
     // Steps pour lancement d'un traitement de modification de masse
     @Bean
     public Step stepLireLigneFichier(JobRepository jobRepository, @Qualifier("lireLigneFichierTasklet") Tasklet tasklet, PlatformTransactionManager transactionManager) {
@@ -315,6 +324,16 @@ public class JobConfiguration {
                 .from(step3).on(Constant.COMPLETED).to(step4)
                 .from(step4).on(Constant.FAILED).end()
                 .from(step4).on(Constant.COMPLETED).to(step5)
+                .build().build();
+    }
+
+    //job de lancement d'un traitement de suppression
+    @Bean
+    public Job jobTraiterLignerFichierSuppr(JobRepository jobRepository, @Qualifier("stepRecupererNextDemandeSuppr") Step step1) {
+        return new JobBuilder("traiterLigneFichierSuppr", jobRepository).incrementer(incrementer())
+                .start(step1).on(Constant.FAILED).end()
+                .from(step1).on(Constant.AUCUNE_DEMANDE).end()
+                .from(step1).on(Constant.COMPLETED).end()
                 .build().build();
     }
 
