@@ -2,10 +2,7 @@ package fr.abes.item.batch.traitement;
 
 import fr.abes.item.batch.LogTime;
 import fr.abes.item.batch.mail.IMailer;
-import fr.abes.item.batch.traitement.model.LigneFichierDto;
-import fr.abes.item.batch.traitement.model.LigneFichierDtoExemp;
-import fr.abes.item.batch.traitement.model.LigneFichierDtoModif;
-import fr.abes.item.batch.traitement.model.LigneFichierDtoRecouv;
+import fr.abes.item.batch.traitement.model.*;
 import fr.abes.item.core.configuration.factory.StrategyFactory;
 import fr.abes.item.core.constant.Constant;
 import fr.abes.item.core.constant.TYPE_DEMANDE;
@@ -85,7 +82,7 @@ public class LireLigneFichierTasklet implements Tasklet, StepExecutionListener {
                             this.lignesFichier.add(new LigneFichierDtoRecouv((LigneFichierRecouv) localLigne));
                             break;
                         case SUPP:
-                            //TODO this.lignesFichier.add(new LigneFichierDtoSuppr((LigneFichierSupp) localLigne));
+                            this.lignesFichier.add(new LigneFichierDtoSuppr((LigneFichierSupp) localLigne));
                         default:
                     }
                 }

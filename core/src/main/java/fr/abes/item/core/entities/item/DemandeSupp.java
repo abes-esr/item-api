@@ -22,7 +22,9 @@ public class DemandeSupp extends Demande {
     public TYPE_DEMANDE getTypeDemande() {
         return TYPE_DEMANDE.SUPP;
     }
-
+    public DemandeSupp(Integer numDemande) {
+        super(numDemande);
+    }
     public DemandeSupp(String rcr, Date dateCreation, Date dateModification, TYPE_SUPPRESSION typeSuppression,
                         String comment, EtatDemande etatDemande, Utilisateur utilisateur) {
         super(rcr, dateCreation, dateModification, etatDemande, comment, utilisateur);

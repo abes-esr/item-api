@@ -329,11 +329,13 @@ public class JobConfiguration {
 
     //job de lancement d'un traitement de suppression
     @Bean
-    public Job jobTraiterLignerFichierSuppr(JobRepository jobRepository, @Qualifier("stepRecupererNextDemandeSuppr") Step step1) {
+    public Job jobTraiterLignerFichierSuppr(JobRepository jobRepository, @Qualifier("stepRecupererNextDemandeSuppr") Step step1, @Qualifier("stepLireLigneFichier") Step step2) {
         return new JobBuilder("traiterLigneFichierSuppr", jobRepository).incrementer(incrementer())
                 .start(step1).on(Constant.FAILED).end()
                 .from(step1).on(Constant.AUCUNE_DEMANDE).end()
-                .from(step1).on(Constant.COMPLETED).end()
+                .from(step1).on(Constant.COMPLETED).to(step2)
+                .from(step2).on(Constant.FAILED).end()
+                .from(step2).on(Constant.COMPLETED).end()
                 .build().build();
     }
 
