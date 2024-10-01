@@ -90,19 +90,6 @@
             <!--     Compilation de l'application Spring                 -->
             <!-- ======================================================= -->
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.2.5</version>
-                <configuration>
-                    <mainClass>fr.abes.item.web.ModifDeMasseApplication</mainClass>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.graalvm.buildtools</groupId>
-                <artifactId>native-maven-plugin</artifactId>
-                <version>0.9.22</version>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.2.0</version>
@@ -117,25 +104,22 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.2.5</version>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <version>0.9.22</version>
+                <extensions>true</extensions>
                 <executions>
                     <execution>
+                        <id>build-native</id>
                         <goals>
-                            <goal>build-image</goal>
+                            <goal>compile-no-fork</goal>
                         </goals>
+                        <configuration>
+                            <mainClass>fr.abes.item.web.ModifDeMasseApplication</mainClass>
+                        </configuration>
+                        <phase>package</phase>
                     </execution>
                 </executions>
-                <configuration>
-                    <mainClass>fr.abes.item.web.ModifDeMasseApplication</mainClass>
-                    <image>
-                        <builder>paketobuildpacks/builder:tiny</builder>
-                        <env>
-                            <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
-                        </env>
-                    </image>
-                </configuration>
             </plugin>
         </plugins>
     </build>
