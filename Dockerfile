@@ -23,6 +23,7 @@ COPY ./core/   /build/core/
 COPY ./web/    /build/web/
 COPY ./batch/  /build/batch/
 RUN mvn --batch-mode \
+        -Pnative \
         -Dmaven.test.skip=false \
         -Duser.timezone=Europe/Paris \
         -Duser.language=fr \

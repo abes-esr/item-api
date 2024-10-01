@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>itembackoffice</artifactId>
         <groupId>fr.abes.item</groupId>
@@ -8,7 +9,6 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
     <artifactId>batch</artifactId>
-
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -79,25 +79,27 @@
                 </includes>
             </resource>
         </resources>
-
         <plugins>
-            <!-- ======================================================= -->
-            <!--     Compilation de l'application Spring                 -->
-            <!-- ======================================================= -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.3.5.RELEASE</version>
-                <configuration>
-                    <mainClass>fr.abes.item.batch.Application</mainClass>
-                </configuration>
+                <version>3.2.5</version>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>repackage</goal>
+                            <goal>build-image</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <mainClass>fr.abes.item.batch.Application</mainClass>
+                    <image>
+                        <builder>paketobuildpacks/builder:tiny</builder>
+                        <env>
+                            <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+                        </env>
+                    </image>
+                </configuration>
             </plugin>
         </plugins>
     </build>

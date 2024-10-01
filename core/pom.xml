@@ -5,8 +5,10 @@
         <groupId>fr.abes.item</groupId>
         <version>3.0.1-SNAPSHOT</version>
     </parent>
+    <version>3.0.1-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
+    <groupId>fr.abes.item</groupId>
     <artifactId>core</artifactId>
     <dependencies>
         <dependency>
@@ -81,4 +83,18 @@
             <version>32.1.2-jre</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>native</id>
+                        <phase>none</phase> <!-- Désactiver le repackage -->
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
