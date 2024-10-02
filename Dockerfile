@@ -3,12 +3,31 @@
 FROM maven:3-eclipse-temurin-17 as build-image
 WORKDIR /build/
 # Installation et configuration de la locale FR
-RUN apt update && DEBIAN_FRONTEND=noninteractive apt -y install locales
-RUN sed -i '/fr_FR.UTF-8/s/^# //g' /etc/locale.gen && \
-    locale-gen
-ENV LANG fr_FR.UTF-8
-ENV LANGUAGE fr_FR:fr
-ENV LC_ALL fr_FR.UTF-8
+RUN set -xeu && \
+    export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates `# stays, not having this is just not useful` \
+        curl \
+        && \
+    mkdir /graalvm && \
+    curl -fsSL "https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-17.0.9/graalvm-community-jdk-17.0.9_linux-x64_bin.tar.gz" \
+        | tar -zxC /graalvm --strip-components 1 && \
+    find /graalvm -name "*src.zip"  -printf "Deleting %p\n" -exec rm {} + && \
+    { test ! -d /graalvm/legal || tar czf /graalvm/legal.tgz /graalvm/legal/; } && \
+    { test ! -d /graalvm/legal || rm -r /graalvm/legal; } && \
+    rm -rf /graalvm/man `# does not exist in java11 package` && \
+    echo Cleaning up... && \
+    apt-get remove -y \
+        curl \
+        && \
+    apt-get autoremove -y && \
+    apt-get clean && rm -r "/var/lib/apt/lists"/* && \
+    # PATH is set via ENV below. However, `bash -l` will source `/etc/profile` and set $PATH on its own.
+    echo 'PATH="/graalvm/bin:$PATH"' | install --mode 0644 /dev/stdin /etc/profile.d/graal-on-path.sh && \
+    echo OK
+
+ENV PATH=/graalvm/bin:$PATH JAVA_HOME=/graalvm
 
 # On lance la compilation Java
 # On débute par une mise en cache docker des dépendances Java
@@ -92,7 +111,7 @@ RUN chmod +x /scripts/itemBatchTraiterLigneFichierRecouv.sh
 COPY ./docker/batch/itemBatchTraiterLigneFichierSupp.sh /scripts/itemBatchTraiterLigneFichierSupp.sh
 RUN chmod +x /scripts/itemBatchTraiterLigneFichierSupp.sh
 
-COPY --from=build-image /build/batch/target/*.jar /scripts/item-batch.jar
+COPY --from=build-image /build/batch/target/* /scripts/
 RUN chmod +x /scripts/item-batch.jar
 
 COPY ./docker/batch/docker-entrypoint.sh /docker-entrypoint.sh

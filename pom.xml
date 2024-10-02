@@ -30,19 +30,15 @@
     <profiles>
         <profile>
             <id>native</id>
-            <modules>
-                <module>batch</module>
-                <module>web</module>
-            </modules>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.9.22</version>
+                        <version>0.10.1</version>
                         <executions>
                             <execution>
-                                <id>native</id>
+                                <id>build-native</id>
                                 <goals>
                                     <goal>compile-no-fork</goal>
                                 </goals>

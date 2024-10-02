@@ -9,7 +9,6 @@
     <version>3.0.1-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
-    <groupId>fr.abes.item</groupId>
     <artifactId>core</artifactId>
     <dependencies>
         <dependency>
@@ -89,10 +88,7 @@
             <plugin>
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
-                <version>0.9.22</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
+                <version>0.10.1</version>
             </plugin>
         </plugins>
     </build>
