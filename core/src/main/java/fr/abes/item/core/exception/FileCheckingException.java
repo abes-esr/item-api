@@ -6,6 +6,10 @@ public class FileCheckingException extends Exception {
 		super("Erreur dans l'analyse du fichier : " + message);
 	}
 
+	public FileCheckingException(Boolean exceedLimit, String message) {
+		super(message);
+	}
+
 	public FileCheckingException(Integer ligneAvecErreur, String message) {
 		super(ERR_FILE_ERRLINE + ligneAvecErreur + " : " + message);
 	}

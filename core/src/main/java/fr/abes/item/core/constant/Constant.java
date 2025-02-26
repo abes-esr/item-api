@@ -55,6 +55,8 @@ public class Constant implements Serializable {
 	public static final String TEXTE_991_CREA = "Exemplaire créé en masse par ITEM";
 	public static final String AUCUNE_DEMANDE = "AUCUNE DEMANDE";
 	public static final String DEFAULT = "default";
+	public static final String ERRORTRT = "Erreur de traitement : ";
+
 
 	/**Authentication failed*/
 	public static final String UTILISATEUR_ABSENT_BASE = "Cet utilisateur n'existe pas dans la base de données.";
@@ -106,8 +108,8 @@ public class Constant implements Serializable {
 	public static final String ERR_FILE_NOREQUESTS = "Le fichier ne contient pas de requêtes. Merci de consulter la documentation utilisateur à cette adresse : <a href=\"http://documentation.abes.fr/aideitem/index.html\" target=\"_blank\" style=\"color:white\">http://documentation.abes.fr/aideitem/index.html</a>";
 	public static final String ERR_FILE_WRONGCONTENT = "Erreur de traitement : Merci de vérifier la conformité de vos fichiers. En cas de difficultés, merci de consulter la documentation utilisateur à cette adresse : <a href=\"http://documentation.abes.fr/aideitem/index.html\" target=\"_blank\" style=\"color:white\">http://documentation.abes.fr/aideitem/index.html</a>";
 	public static final String ERR_FILE_NOTRAIT = "Aucun traitement associé à la demande.";
-	public static final String ERR_FILE_TOOMUCH_START = "Le fichier dépasse la limite des ";
-	public static final String ERR_FILE_TOOMUCH_END = " notices. Merci de consulter la documentation utilisateur à cette adresse : <a href=\"http://documentation.abes.fr/aideitem/index.html\" target=\"_blank\" style=\"color:white\">http://documentation.abes.fr/aideitem/index.html</a>";
+	public static final String ERR_FILE_TOOMUCH_START = "Votre fichier dépasse la limite des ";
+	public static final String ERR_FILE_TOOMUCH_END = " lignes autorisée. En cas de difficultés, merci de consulter la documentation utilisateur à cette adresse : <a href=\"http://documentation.abes.fr/aideitem/index.html\" target=\"_blank\" style=\"color:white\">http://documentation.abes.fr/aideitem/index.html</a>";
 	public static final String ERR_FILE_TOOMUCH_MODIF = Constant.ERR_FILE_TOOMUCH_START + Constant.MAX_LIGNE_FICHIER_INIT_MODIF + Constant.ERR_FILE_TOOMUCH_END;
 	public static final String ERR_FILE_TOOMUCH_EXEMP = Constant.ERR_FILE_TOOMUCH_START + Constant.MAX_LIGNE_FICHIER_INIT_EXEMP + Constant.ERR_FILE_TOOMUCH_END;
 	public static final String ERR_FILE_TOOMUCH_SUPP = Constant.ERR_FILE_TOOMUCH_START + Constant.MAX_LIGNE_FICHIER_INIT_SUPP + Constant.ERR_FILE_TOOMUCH_END;

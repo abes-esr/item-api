@@ -124,7 +124,7 @@ public class FichierEnrichiExemp extends AbstractFichier implements Fichier {
 
             //cas ou le nombre de lignes du fichier dépassent la limite autorisée
             if ((ligneCourantePositionNumber - 1) > Constant.MAX_LIGNE_FICHIER_INIT_EXEMP) {
-                throw new FileCheckingException(ligneCourantePositionNumber, Constant.ERR_FILE_TOOMUCH_EXEMP);
+                throw new FileCheckingException(true, Constant.ERRORTRT + Constant.ERR_FILE_TOOMUCH_EXEMP);
             }
         }
     }

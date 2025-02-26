@@ -45,7 +45,7 @@ public class FichierInitial extends AbstractFichier implements Fichier {
 
             //cas ou il y a trop de lignes dans le fichier
             if ((ligneCourante - 1) > Constant.MAX_LIGNE_FICHIER_INIT_MODIF) {
-                throw new FileCheckingException(ligneCourante, Constant.ERR_FILE_TOOMUCH_MODIF);
+                throw new FileCheckingException(true, Constant.ERRORTRT + Constant.ERR_FILE_TOOMUCH_MODIF);
             }
 
         }

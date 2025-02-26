@@ -99,7 +99,7 @@ public class FichierEnrichiRecouv extends AbstractFichier implements Fichier {
 
             //cas ou le nombre de lignes du fichier dépassent la limite autorisée
             if ((ligneCourante - 1) > Constant.MAX_LIGNE_FICHIER_INIT_EXEMP) {
-                throw new FileCheckingException(ligneCourante, Constant.ERR_FILE_TOOMUCH_EXEMP);
+                throw new FileCheckingException(true, Constant.ERRORTRT +  Constant.ERR_FILE_TOOMUCH_EXEMP);
             }
         }
     }
