@@ -107,7 +107,7 @@ public class Constant implements Serializable {
 	public static final String ERR_FILE_WRONGCONTENT = "Erreur de traitement : Merci de vérifier la conformité de vos fichiers. En cas de difficultés, merci de consulter la documentation utilisateur à cette adresse : <a href=\"http://documentation.abes.fr/aideitem/index.html\" target=\"_blank\" style=\"color:white\">http://documentation.abes.fr/aideitem/index.html</a>";
 	public static final String ERR_FILE_NOTRAIT = "Aucun traitement associé à la demande.";
 	public static final String ERR_FILE_TOOMUCH_START = "Le fichier dépasse la limite des ";
-	public static final String ERR_FILE_TOOMUCH_END = " notices. Merci de consulter la documentation utilisateur à cette adresse : <a href=\"http://documentation.abes.fr/aideitem/index.html\" target=\"_blank\" style=\"color:white\">http://documentation.abes.fr/aideitem/index.html</a>";
+	public static final String ERR_FILE_TOOMUCH_END = " lignes. Merci de consulter la documentation utilisateur à cette adresse : <a href=\"http://documentation.abes.fr/aideitem/index.html\" target=\"_blank\" style=\"color:white\">http://documentation.abes.fr/aideitem/index.html</a>";
 	public static final String ERR_FILE_TOOMUCH_MODIF = Constant.ERR_FILE_TOOMUCH_START + Constant.MAX_LIGNE_FICHIER_INIT_MODIF + Constant.ERR_FILE_TOOMUCH_END;
 	public static final String ERR_FILE_TOOMUCH_EXEMP = Constant.ERR_FILE_TOOMUCH_START + Constant.MAX_LIGNE_FICHIER_INIT_EXEMP + Constant.ERR_FILE_TOOMUCH_END;
 	public static final String ERR_FILE_TOOMUCH_SUPP = Constant.ERR_FILE_TOOMUCH_START + Constant.MAX_LIGNE_FICHIER_INIT_SUPP + Constant.ERR_FILE_TOOMUCH_END;
