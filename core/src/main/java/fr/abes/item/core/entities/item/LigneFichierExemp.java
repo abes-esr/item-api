@@ -16,8 +16,8 @@ public class LigneFichierExemp extends LigneFichier implements Serializable, ILi
 
     @Column(name = "VALEUR_ZONE", length = 2000)
     protected String valeurZone;
-    @Lob
-    @Column(name = "INDEX_RECHERCHE", columnDefinition = "TEXT")
+
+    @Column(name = "INDEX_RECHERCHE")
     private String indexRecherche;
 
     @Column(name = "NUM_EXEMPLAIRE")
