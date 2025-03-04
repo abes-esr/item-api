@@ -1,6 +1,5 @@
 package fr.abes.item.core.entities.item;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
