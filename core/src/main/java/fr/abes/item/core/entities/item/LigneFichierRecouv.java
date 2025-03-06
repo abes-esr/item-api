@@ -13,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter @Setter
 public class LigneFichierRecouv extends LigneFichier implements Serializable, ILigneFichier {
-    @Column(name = "INDEX_RECHERCHE", columnDefinition = "TEXT")
+    @Column(name = "INDEX_RECHERCHE")
     private String indexRecherche;
 
     @Column(name = "NB_REPONSES")
