@@ -175,14 +175,14 @@ public class DemandeRecouvService extends DemandeService implements IDemandeServ
         List<DemandeRecouv> listeDemandes;
         if (currentHour >= minHour && currentHour <= maxHour) {
             if (bigVolume)
-                listeDemandes = demandeRecouvDao.getDemandesEnAttenteGrosVolume(limite);
-            else
-                listeDemandes = demandeRecouvDao.getDemandesEnAttentePetitVolume(limite);
-        } else {
-            if (bigVolume)
                 listeDemandes = demandeRecouvDao.getDemandesToProceedWithoutDATGrosVolume(limite);
             else
                 listeDemandes = demandeRecouvDao.getDemandesToProceedWithoutDATPetitVolume(limite);
+        } else {
+            if (bigVolume)
+                listeDemandes = demandeRecouvDao.getDemandesEnAttenteGrosVolume(limite);
+            else
+                listeDemandes = demandeRecouvDao.getDemandesEnAttentePetitVolume(limite);
         }
         if (!listeDemandes.isEmpty())
             return listeDemandes.get(0);
