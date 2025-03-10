@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.Level;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -197,7 +198,7 @@ public class DemandeRestService {
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @Operation(summary = "permet de charger le fichier pour une demande")
     public void uploadDemande(@PathVariable("type") TYPE_DEMANDE type, @PathVariable("id") Integer numDemande, @RequestParam("file") MultipartFile file, HttpServletRequest request)
-            throws FileTypeException, FileCheckingException, DemandeCheckingException, IOException, UserExistException, ForbiddenException {
+            throws FileTypeException, FileCheckingException, DemandeCheckingException, IOException, UserExistException, ForbiddenException, DataIntegrityViolationException {
         checkAccessToServices.autoriserAccesDemandeParIln(numDemande, request.getAttribute(Constant.USER_NUM).toString(), type);
         IDemandeService service = strategy.getStrategy(IDemandeService.class, type);
         Demande demande = service.findById(numDemande);

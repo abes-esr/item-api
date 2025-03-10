@@ -24,6 +24,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.Level;
 import org.mozilla.universalchardet.ReaderFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,7 +75,7 @@ public class LigneFichierExempService implements ILigneFichierService {
     //Construction des lignes d'exemplaires
     @Override
     @Transactional
-    public void saveFile(File file, Demande demande) {
+    public void saveFile(File file, Demande demande) throws DataIntegrityViolationException {
         DemandeExemp demandeExemp = (DemandeExemp) demande;
         try (BufferedReader reader = ReaderFactory.createBufferedReader(file)) {
             String line;

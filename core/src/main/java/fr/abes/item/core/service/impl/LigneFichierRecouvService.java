@@ -15,6 +15,7 @@ import fr.abes.item.core.utilitaire.Utilitaires;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.mozilla.universalchardet.ReaderFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -74,7 +75,7 @@ public class LigneFichierRecouvService implements ILigneFichierService {
     }
 
     @Override
-    public void saveFile(File file, Demande demande) {
+    public void saveFile(File file, Demande demande) throws DataIntegrityViolationException {
         DemandeRecouv demandeRecouv = (DemandeRecouv) demande;
         try (BufferedReader reader = ReaderFactory.createBufferedReader(file)) {
             String line;
