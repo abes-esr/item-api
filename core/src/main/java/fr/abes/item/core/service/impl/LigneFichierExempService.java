@@ -51,7 +51,6 @@ public class LigneFichierExempService implements ILigneFichierService {
     private String donneeLocaleExistante;
     @Getter
     private int nbReponses;
-    private final ReentrantLock lock = new ReentrantLock();
 
 
     public LigneFichierExempService(ILigneFichierExempDao dao, TraitementService traitementService, IZonesAutoriseesDao zonesAutoriseesDao) {
@@ -189,7 +188,6 @@ public class LigneFichierExempService implements ILigneFichierService {
         try {
             DemandeExemp demande = (DemandeExemp) demandeExemp;
             LigneFichierExemp ligneFichier = (LigneFichierExemp) ligneFichierExemp;
-            lock.lock();
             traitementService.authenticate("M" + demande.getRcr());
             String numEx = launchQueryToSudoc(demande, ligneFichier.getIndexRecherche());
             //Retourne le tableau exemplaires existants / Exemplaire à créer
@@ -208,7 +206,6 @@ public class LigneFichierExempService implements ILigneFichierService {
             throw new CBSException(Level.ERROR, e.getMessage());
         } finally {
             traitementService.disconnect();
-            lock.unlock();
         }
     }
 
