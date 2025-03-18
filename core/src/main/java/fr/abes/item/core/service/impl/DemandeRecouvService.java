@@ -21,6 +21,7 @@ import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -225,7 +226,7 @@ public class DemandeRecouvService extends DemandeService implements IDemandeServ
     }
 
     @Override
-    public void stockerFichier(MultipartFile file, Demande demande) throws IOException, FileTypeException, FileCheckingException, DemandeCheckingException {
+    public void stockerFichier(MultipartFile file, Demande demande) throws IOException, FileTypeException, FileCheckingException {
         DemandeRecouv demandeRecouv = (DemandeRecouv) demande;
         try {
             Utilitaires.checkExtension(Objects.requireNonNull(file.getOriginalFilename()));
@@ -235,10 +236,12 @@ public class DemandeRecouvService extends DemandeService implements IDemandeServ
             this.majDemandeWithFichierEnrichi(demandeRecouv);
         } catch (NullPointerException e) {
             throw new NullPointerException(Constant.ERR_FILE_NOT_FOUND);
+        } catch (DataIntegrityViolationException e) {
+            throw new FileCheckingException(e.getMessage());
         }
     }
 
-    private void majDemandeWithFichierEnrichi(DemandeRecouv demandeRecouv) throws DemandeCheckingException, IOException {
+    private void majDemandeWithFichierEnrichi(DemandeRecouv demandeRecouv) throws IOException, FileCheckingException, DataIntegrityViolationException {
         demandeRecouv.setIndexRecherche(fichierEnrichiRecouv.getIndexRecherche());
         ligneFichierService.saveFile(storageService.loadAsResource(fichierEnrichiRecouv.getFilename()).getFile(), demandeRecouv);
         demandeRecouvDao.save(demandeRecouv);

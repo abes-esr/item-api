@@ -105,7 +105,7 @@ public class DemandeModifService extends DemandeService implements IDemandeServi
      *
      * @param demandeModif demandeModif sur laquelle se porte la verification
      */
-    private void checkEtatDemande(DemandeModif demandeModif) throws IOException, FileTypeException, DemandeCheckingException {
+    private void checkEtatDemande(DemandeModif demandeModif) throws IOException, FileTypeException, DemandeCheckingException, FileCheckingException {
         int etat = demandeModif.getEtatDemande().getNumEtat();
         switch (etat) {
             case Constant.ETATDEM_PREPARATION:
@@ -148,7 +148,7 @@ public class DemandeModifService extends DemandeService implements IDemandeServi
      *
      * @param dem : demandeModif liée aux fichiers à préparer
      */
-    private void preparerFichierEnPrep(DemandeModif dem) throws IOException, FileTypeException, DemandeCheckingException {
+    private void preparerFichierEnPrep(DemandeModif dem) throws IOException, FileTypeException, DemandeCheckingException, FileCheckingException {
         //Suppression d'un éventuel fichier existant sur le disque
         storageService.delete(fichierPrepare.getFilename());
         //Ecriture ligne d'en-tête dans FichierApresWS

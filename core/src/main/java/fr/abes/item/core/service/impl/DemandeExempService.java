@@ -24,6 +24,7 @@ import jakarta.persistence.EntityManager;
 import lombok.ToString;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -161,7 +162,7 @@ public class DemandeExempService extends DemandeService implements IDemandeServi
      * @throws DemandeCheckingException : erreur dans l'état de la demande
      */
     @Override
-    public void stockerFichier(MultipartFile file, Demande demande) throws IOException, FileTypeException, FileCheckingException, DemandeCheckingException {
+    public void stockerFichier(MultipartFile file, Demande demande) throws IOException, FileTypeException, FileCheckingException, DemandeCheckingException, DataIntegrityViolationException {
         DemandeExemp demandeExemp = (DemandeExemp) demande;
         try {
             Utilitaires.checkExtension(Objects.requireNonNull(file.getOriginalFilename()));
@@ -171,6 +172,8 @@ public class DemandeExempService extends DemandeService implements IDemandeServi
             this.majDemandeWithFichierEnrichi(demandeExemp); //mise à jour de la demande avec les paramètres du fichier enrichi : index de recherche, liste des zones, ajout des lignes du fichier dans la BDD
         } catch (NullPointerException e) {
             throw new NullPointerException(Constant.ERR_FILE_NOT_FOUND);
+        } catch (DataIntegrityViolationException e) {
+            throw new FileCheckingException(e.getMessage());
         }
     }
 
@@ -207,7 +210,7 @@ public class DemandeExempService extends DemandeService implements IDemandeServi
      * @throws IOException : erreur lecture fichier
      * @throws DemandeCheckingException : erreur dans la demande
      */
-    private void majDemandeWithFichierEnrichi(DemandeExemp demandeExemp) throws IOException, DemandeCheckingException {
+    private void majDemandeWithFichierEnrichi(DemandeExemp demandeExemp) throws IOException, DemandeCheckingException, FileCheckingException, DataIntegrityViolationException {
         demandeExemp.setIndexRecherche(fichierEnrichiExemp.getIndexRecherche()); //Index de recherche
         demandeExemp.setListeZones(fichierEnrichiExemp.getValeurZones()); //Ligne d'entête sans l'index de recherche
         ligneFichierService.saveFile(storageService.loadAsResource(fichierEnrichiExemp.getFilename()).getFile(), demandeExemp); //Construction des lignes d'exemplaires pour insertion en base sur table LIGNE_FICHIER_EXEMP
