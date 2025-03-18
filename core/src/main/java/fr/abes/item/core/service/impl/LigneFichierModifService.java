@@ -35,7 +35,6 @@ import java.util.regex.Pattern;
 public class LigneFichierModifService implements ILigneFichierService {
     private final ILigneFichierModifDao dao;
     private final TraitementService traitementService;
-    private final ReentrantLock lock = new ReentrantLock();
 
     public LigneFichierModifService(ILigneFichierModifDao dao, TraitementService traitementService) {
         this.dao = dao;
@@ -165,9 +164,7 @@ public class LigneFichierModifService implements ILigneFichierService {
     @Override
     public String[] getNoticeExemplaireAvantApres(Demande demande, LigneFichier ligneFichier) throws CBSException, IOException, ZoneException {
         LigneFichierModif ligneFichierModif = (LigneFichierModif) ligneFichier;
-        lock.lock();
         String noticeInit = getNoticeInitiale(demande, ligneFichierModif.getEpn());
-        lock.unlock();
         Exemplaire noticeTraitee = new Exemplaire();
         if (!noticeInit.isEmpty()) {
             noticeTraitee = getNoticeTraitee(demande, noticeInit, ligneFichier);

@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
 @Service
@@ -37,11 +38,14 @@ public class TraitementService {
     @Value("${sudoc.pass}")
     private String passsudoc;
 
+    private final ReentrantLock lock = new ReentrantLock();
+
 	public TraitementService() {
 		cbs = new ProcessCBS();
     }
 
     public void authenticate(String login) throws CBSException, IOException {
+        this.lock.lock();
         this.cbs = new ProcessCBS();
         this.cbs.authenticate(serveurSudoc, portSudoc, login, passsudoc);
     }
@@ -203,6 +207,7 @@ public class TraitementService {
      */
     public void disconnect() throws CBSException {
         cbs.getClientCBS().disconnect();
+        this.lock.unlock();
     }
 
 

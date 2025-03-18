@@ -39,7 +39,6 @@ import java.util.stream.Collectors;
 public class LigneFichierSuppService implements ILigneFichierService {
     private final ILigneFichierSuppDao dao;
     private final TraitementService traitementService;
-    private final ReentrantLock lock = new ReentrantLock();
 
 
     public LigneFichierSuppService(ILigneFichierSuppDao dao, TraitementService traitementService) {
@@ -168,7 +167,6 @@ public class LigneFichierSuppService implements ILigneFichierService {
         LigneFichierSupp ligneFichierSupp = (LigneFichierSupp) ligneFichier;
         DemandeSupp demandeSupp = (DemandeSupp) demande;
         try {
-            lock.lock();
             traitementService.authenticate("M" + demandeSupp.getRcr());
             List<Exemplaire> exemplairesExistants = getExemplairesExistants(ligneFichierSupp.getPpn());
             //On ne conserve que les EPN de son RCR
@@ -191,7 +189,6 @@ public class LigneFichierSuppService implements ILigneFichierService {
             throw new CBSException(Level.ERROR, ex.getMessage());
         } finally {
             traitementService.disconnect();
-            lock.unlock();
         }
     }
 
