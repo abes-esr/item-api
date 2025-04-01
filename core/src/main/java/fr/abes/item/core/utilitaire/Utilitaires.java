@@ -9,18 +9,22 @@ import fr.abes.cbs.utilitaire.Utilitaire;
 import fr.abes.item.core.constant.Constant;
 import fr.abes.item.core.constant.TYPE_DEMANDE;
 import fr.abes.item.core.exception.FileCheckingException;
+import fr.abes.item.core.exception.FileLineException;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.PrimitiveIterator;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,6 +75,52 @@ public class Utilitaires {
         String extension = filename.substring(filename.length() - 4);
         if (!((".txt").equals(extension) || (".csv").equals(extension))) {
             throw new FileCheckingException(Constant.ERR_FILE_FORMAT);
+        }
+    }
+
+    public static void checkL035(MultipartFile file) throws IOException, FileLineException {
+        if (file == null || file.isEmpty()) {
+            return;
+        }
+
+        InputStream inputStream = file.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+
+        String firstLine = reader.readLine();
+        if (firstLine == null) {
+            reader.close();
+            return;
+        }
+
+        String[] header = firstLine.split(";", -1);
+        int l035Position = -1;
+
+        for (int i = 0; i < header.length; i++) {
+            if (header[i].contains("L035")) {
+                l035Position = i;
+                break;
+            }
+        }
+
+        if (l035Position == -1) {
+            reader.close();
+            return;
+        }
+
+        String line;
+        int lineNumber = 1;
+
+        try {
+            while ((line = reader.readLine()) != null) {
+                lineNumber++;
+                String[] columns = line.split(";", -1);
+
+                if (l035Position >= columns.length || columns[l035Position].trim().isEmpty()) {
+                    throw new FileLineException("Valeur L035 manquante à la ligne " + lineNumber);
+                }
+            }
+        } finally {
+            reader.close();
         }
     }
 
