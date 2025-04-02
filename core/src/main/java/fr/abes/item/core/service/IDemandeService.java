@@ -4,6 +4,7 @@ import fr.abes.item.core.dto.DemandeDto;
 import fr.abes.item.core.entities.item.Demande;
 import fr.abes.item.core.exception.DemandeCheckingException;
 import fr.abes.item.core.exception.FileCheckingException;
+import fr.abes.item.core.exception.FileLineException;
 import fr.abes.item.core.exception.FileTypeException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +27,7 @@ public interface IDemandeService {
 
     void initFiles(Demande demande) throws FileTypeException;
 
-    void stockerFichier(MultipartFile file, Demande demande) throws IOException, FileTypeException, FileCheckingException, DemandeCheckingException;
+    void stockerFichier(MultipartFile file, Demande demande) throws IOException, FileTypeException, FileCheckingException, DemandeCheckingException, FileLineException;
 
     Demande previousState(Demande demande) throws DemandeCheckingException, IOException;
 

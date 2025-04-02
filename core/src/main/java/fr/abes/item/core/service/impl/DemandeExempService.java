@@ -13,6 +13,7 @@ import fr.abes.item.core.entities.item.EtatDemande;
 import fr.abes.item.core.entities.item.TypeExemp;
 import fr.abes.item.core.exception.DemandeCheckingException;
 import fr.abes.item.core.exception.FileCheckingException;
+import fr.abes.item.core.exception.FileLineException;
 import fr.abes.item.core.exception.FileTypeException;
 import fr.abes.item.core.repository.baseXml.ILibProfileDao;
 import fr.abes.item.core.repository.item.IDemandeExempDao;
@@ -161,16 +162,19 @@ public class DemandeExempService extends DemandeService implements IDemandeServi
      * @throws DemandeCheckingException : erreur dans l'état de la demande
      */
     @Override
-    public void stockerFichier(MultipartFile file, Demande demande) throws IOException, FileTypeException, FileCheckingException, DemandeCheckingException {
+    public void stockerFichier(MultipartFile file, Demande demande) throws IOException, FileTypeException, FileCheckingException, DemandeCheckingException, FileLineException {
         DemandeExemp demandeExemp = (DemandeExemp) demande;
         try {
             Utilitaires.checkExtension(Objects.requireNonNull(file.getOriginalFilename()));
+            Utilitaires.checkL035(file);
             Fichier fichier = FichierFactory.getFichier(demande.getEtatDemande().getNumEtat(), TYPE_DEMANDE.EXEMP); //Retourne un FichierEnrichiExemp
             fichier.generateFileName(demande); //génération nom du fichier
             stockerFichierOnDisk(file, fichier, demandeExemp); //stockage du fichier sur disque, le controle de l'entête du fichier s'effectue ici
             this.majDemandeWithFichierEnrichi(demandeExemp); //mise à jour de la demande avec les paramètres du fichier enrichi : index de recherche, liste des zones, ajout des lignes du fichier dans la BDD
         } catch (NullPointerException e) {
             throw new NullPointerException(Constant.ERR_FILE_NOT_FOUND);
+        } catch (FileLineException e) {
+            throw new FileCheckingException("Erreur: " + e);
         }
     }
 
