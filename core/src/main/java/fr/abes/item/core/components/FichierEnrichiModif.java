@@ -56,6 +56,7 @@ public class FichierEnrichiModif extends AbstractFichier implements Fichier {
                 throw new FileCheckingException(Constant.ERR_FILE_NOTRAIT);
             }
             String ligne = Utilitaires.checkBom(bufLecteur.readLine());
+            //TODO desactiver si on veut insérer des EPN vides
             check3Cols(ligne);
             String tagSubTag = ligne.split(";")[3];
             if (tagSubTag.matches("e\\d{2}\\$a")) {
@@ -152,6 +153,7 @@ public class FichierEnrichiModif extends AbstractFichier implements Fichier {
             String[] tabligne = ligne.split(";");
             checkRcr(tabligne[1], demandeModif.getRcr(), ligneCourante);
             checkPpn(tabligne[0], ligneCourante);
+            //TODO si EPN est nul faire une gestion du index out of bound exception
             checkEpn(tabligne[2], ligneCourante);
             check4cols(tabligne, demandeModif.getTraitement().getNomMethode());
         }catch (IndexOutOfBoundsException e) {

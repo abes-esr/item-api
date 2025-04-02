@@ -127,6 +127,7 @@ public class Constant implements Serializable {
 	public static final String ERR_FILE_WRONGRCR = "La valeur du rcr ne correspond pas au rcr de la demande.";
 	public static final String ERR_FILE_WRONGPPN = "Le PPN n'est pas conforme.";
 	public static final String ERR_FILE_WRONGEPN = "La valeur de l'epn n'est pas conforme.";
+	public static final String ERR_FILE_L035 = "Des lignes dans le fichier n'ont pas de valeur pour le colonne L035";
 
 	public static final String ERR_FILE_DOLLARFORBID = "le caractère $ est interdit dans la 4è colonne.";
 	public static final String ERR_FILE_LINEFILE = "Erreur de traitement sur la ligne du fichier.";
