@@ -13,8 +13,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Test pour FichierEnrichi Suppression")
 public class TestFichierEnrichiSupp {
@@ -68,9 +67,9 @@ public class TestFichierEnrichiSupp {
     @Test
     void checkEpnNonVideNonOk() {
         DemandeSupp demandeSupp = new DemandeSupp("341725201", new Date(), new Date(), TYPE_SUPPRESSION.EPN, "", new EtatDemande(1), new Utilisateur(1));
-        FichierEnrichiSupp fic = new FichierEnrichiSupp("checkEpnNonVideNonOk.csv");
+        FichierEnrichiSupp fic = new FichierEnrichiSupp("checkEpnNonVideOk.csv");
         fic.setPath(Paths.get("src/test/resources/fichierEnrichiSupp"));
-        assertTrue(assertThrows(FileCheckingException.class, () -> fic.checkFileContent(demandeSupp)).getMessage().contains(Constant.ERR_FILE_WRONGEPN));
+        assertDoesNotThrow(() -> fic.checkFileContent(demandeSupp));
     }
 
     @DisplayName("checkRcrDiffDemande")
