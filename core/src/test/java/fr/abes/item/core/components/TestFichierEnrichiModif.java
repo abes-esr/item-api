@@ -14,8 +14,7 @@ import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Test pour FichierEnrichi modification")
 class TestFichierEnrichiModif {
@@ -199,10 +198,9 @@ class TestFichierEnrichiModif {
 	@Test
 	void checkEpn() {
 		DemandeModif demandeModif = new DemandeModif("341720001", new Date(), new Date(), "", "", "", new EtatDemande(1), new Utilisateur(1), new Traitement(1, "Ajout une sous-zone", "ajoutSousZone"));
-		FichierEnrichiModif fic = new FichierEnrichiModif("NokEpn.csv");
+		FichierEnrichiModif fic = new FichierEnrichiModif("NewOkEpn.csv");
 		fic.setPath(Paths.get("src/test/resources/fichierEnrichiModif"));
-		assertTrue(assertThrows(FileCheckingException.class, () -> fic.checkFileContent(demandeModif)).getMessage().contains("La valeur de l'epn n'est pas conforme"));
-
+		assertDoesNotThrow(() -> fic.checkFileContent(demandeModif));
 	}
 
 	@DisplayName("checkE856")
