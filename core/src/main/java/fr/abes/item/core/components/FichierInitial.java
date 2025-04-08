@@ -60,7 +60,7 @@ public class FichierInitial extends AbstractFichier implements Fichier {
      * @throws FileCheckingException : erreur dans la format de la ligne
      */
     protected void checkBodyLine(String ligne) throws FileCheckingException {
-        if (ligne.length() != 9) {
+        if (ligne.trim().length() != 9) {
             throw new FileCheckingException(Constant.ERR_FILE_LINE + ligneCourante + " : " + Constant.ERR_FILE_ONLYONEPPN);
         }
         ligneCourante++;

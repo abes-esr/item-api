@@ -144,7 +144,7 @@ public class FichierEnrichiModif extends AbstractFichier implements Fichier {
      * @throws FileCheckingException : erreur de format de la ligne
      */
     private void checkBodyLine(String ligne, DemandeModif demandeModif) throws FileCheckingException {
-        if (ligne.length() < 13) {
+        if (ligne.trim().length() < 13) {
             throw new FileCheckingException(Constant.ERR_FILE_ERRLINE + ligneCourante
                     + Constant.ERR_FILE_LINELENGTH);
         }
