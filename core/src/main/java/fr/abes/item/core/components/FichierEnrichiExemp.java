@@ -288,11 +288,11 @@ public class FichierEnrichiExemp extends AbstractFichier implements Fichier {
         List<String> listeChamps = new ArrayList<>(Arrays.asList(tabLigne));
 
         //analyse de la valeur de la date dans le cas d'une recherche date;auteur;titre
-        if ((("DAT").equals(this.indexRecherche.getCode())) && (!listeChamps.get(0).matches("\\d{4}"))) {
+        if ((("DAT").equals(this.indexRecherche.getCode())) && (!listeChamps.get(0).trim().matches("\\d{4}"))) {
             throw new FileCheckingException(ligneCourantePositionNumber, Constant.ERR_FILE_DATENOK);
         }
 
-        if ((("PPN").equals(this.indexRecherche.getCode())) && (!listeChamps.get(0).matches(Constant.PATTERN_INDEX_PPN))) {
+        if ((("PPN").equals(this.indexRecherche.getCode())) && (!listeChamps.get(0).trim().matches(Constant.PATTERN_INDEX_PPN))) {
             throw new FileCheckingException(ligneCourantePositionNumber, Constant.ERR_FILE_WRONGPPN);
         }
     }

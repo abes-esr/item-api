@@ -74,18 +74,27 @@ public class FichierPrepare extends AbstractFichier implements Fichier {
 	 */
 	public void alimenterEpn(String input, String listeppn, String rcr) {
 		try (FileWriter fw = new FileWriter(path.resolve(filename).toString(), true);
-				 BufferedWriter bw = new BufferedWriter(fw);
-				 PrintWriter out = new PrintWriter(bw)) {
-			String[] tabppn = listeppn.split(",");
+			 BufferedWriter bw = new BufferedWriter(fw);
+			 PrintWriter out = new PrintWriter(bw)) {
+			// Nettoyage des PPNs en entrée
+			String[] tabppn = listeppn.split("\\s*,\\s*");
+			// Nettoyage du RCR
+			rcr = rcr != null ? rcr.trim() : "";
+
 			Multimap<String, String> resJson = Utilitaires.parseJson(input, false);
-            for (String ppn : tabppn) {
-                if (resJson.containsKey(ppn)) {
-                    for (String epn : resJson.get(ppn)) {
-                        out.println(ppn + ";" + rcr + ";" + epn + ";");
-                    }
-                } else
-                    out.println(ppn + ";" + rcr + ";;");
-            }
+
+			for (String ppn : tabppn) {
+				ppn = ppn.trim(); // Sécurité PPN
+				if (resJson.containsKey(ppn)) {
+					for (String epn : resJson.get(ppn)) {
+						// Nettoyage de l'EPN
+						epn = epn != null ? epn.trim() : "";
+						out.println(ppn + ";" + rcr + ";" + epn + ";");
+					}
+				} else {
+					out.println(ppn + ";" + rcr + ";;");
+				}
+			}
 		} catch (IOException ex) {
 			log.error(Constant.ERROR_UNABLE_TO_CREATE_FILE);
 		}

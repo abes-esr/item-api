@@ -168,7 +168,7 @@ public class LigneFichierSuppService implements ILigneFichierService {
         DemandeSupp demandeSupp = (DemandeSupp) demande;
         try {
             traitementService.authenticate("M" + demandeSupp.getRcr());
-            List<Exemplaire> exemplairesExistants = getExemplairesExistants(ligneFichierSupp.getPpn());
+            List<Exemplaire> exemplairesExistants = getExemplairesExistants(ligneFichierSupp.getPpn().trim());
             //On ne conserve que les EPN de son RCR
             exemplairesExistants = exemplairesExistants.stream().filter(exemplaire -> exemplaire.findZone("930", 0).findSubLabel("$b").equals(demandeSupp.getRcr())).toList();
             if (exemplairesExistants.isEmpty()) {
