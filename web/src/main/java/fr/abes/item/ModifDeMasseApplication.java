@@ -1,5 +1,8 @@
 package fr.abes.item;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -13,7 +16,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.Collections;
 
-
+@Slf4j
 @SpringBootApplication
 public class ModifDeMasseApplication extends SpringBootServletInitializer {
 
@@ -42,5 +45,4 @@ public class ModifDeMasseApplication extends SpringBootServletInitializer {
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
     }
-
 }
