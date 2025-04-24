@@ -8,15 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @Slf4j
 @SpringBootApplication
-public class Application implements CommandLineRunner {
-    @Value("${sudoc.port}")
-    private int portDeConnexionAuSudoc;
+public class Application {
     public static void main(String[] args) {
         SpringApplication.exit(SpringApplication.run(Application.class, args));
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        log.info("Connection au sudoc via port:{}", portDeConnexionAuSudoc);
     }
 }

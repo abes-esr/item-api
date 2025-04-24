@@ -18,9 +18,7 @@ import java.util.Collections;
 
 @Slf4j
 @SpringBootApplication
-public class ModifDeMasseApplication extends SpringBootServletInitializer implements CommandLineRunner {
-    @Value("${sudoc.port}")
-    private int portDeConnexionAuSudoc;
+public class ModifDeMasseApplication extends SpringBootServletInitializer {
 
 	@Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -46,10 +44,5 @@ public class ModifDeMasseApplication extends SpringBootServletInitializer implem
         FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        log.info("Connection au sudoc via port:{}", portDeConnexionAuSudoc);
     }
 }
