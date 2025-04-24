@@ -1,5 +1,8 @@
 package fr.abes.item;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -13,9 +16,11 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.Collections;
 
-
+@Slf4j
 @SpringBootApplication
-public class ModifDeMasseApplication extends SpringBootServletInitializer {
+public class ModifDeMasseApplication extends SpringBootServletInitializer implements CommandLineRunner {
+    @Value("${sudoc.port}")
+    private int portDeConnexionAuSudoc;
 
 	@Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -43,4 +48,8 @@ public class ModifDeMasseApplication extends SpringBootServletInitializer {
         return bean;
     }
 
+    @Override
+    public void run(String... args) throws Exception {
+        log.info("Connection au sudoc via port:{}", portDeConnexionAuSudoc);
+    }
 }
