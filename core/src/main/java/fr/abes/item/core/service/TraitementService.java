@@ -47,6 +47,7 @@ public class TraitementService {
     public void authenticate(String login) throws CBSException, IOException {
         this.lock.lock();
         this.cbs = new ProcessCBS();
+        log.warn("Connexion au sudoc via port: " + "{}", portSudoc);
         this.cbs.authenticate(serveurSudoc, portSudoc, login, passsudoc);
     }
 
