@@ -73,7 +73,7 @@ public class LigneFichierExempService implements ILigneFichierService {
     //Construction des lignes d'exemplaires
     @Override
     @Transactional
-    public void saveFile(File file, Demande demande) {
+    public void saveFileAndPutLignesFichierInDatabase(File file, Demande demande) {
         DemandeExemp demandeExemp = (DemandeExemp) demande;
         try (BufferedReader reader = ReaderFactory.createBufferedReader(file)) {
             String line;

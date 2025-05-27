@@ -74,7 +74,7 @@ public class LigneFichierRecouvService implements ILigneFichierService {
     }
 
     @Override
-    public void saveFile(File file, Demande demande) {
+    public void saveFileAndPutLignesFichierInDatabase(File file, Demande demande) {
         DemandeRecouv demandeRecouv = (DemandeRecouv) demande;
         try (BufferedReader reader = ReaderFactory.createBufferedReader(file)) {
             String line;

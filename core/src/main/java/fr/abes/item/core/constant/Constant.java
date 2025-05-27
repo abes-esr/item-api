@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Constant implements Serializable {
 
+	public static final String ERR_FILE_NULL_RCR = "Rcr null";
 	@Serial
 	private static final long serialVersionUID = 1L;
 	//Type exemplarisation Monographie électronique

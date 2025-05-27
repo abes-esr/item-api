@@ -44,7 +44,7 @@ public class LigneFichierModifService implements ILigneFichierService {
     @Override
     @Transactional
     @SuppressWarnings("squid:S3776")
-    public void saveFile(File file, Demande demande){
+    public void saveFileAndPutLignesFichierInDatabase(File file, Demande demande){
         DemandeModif demandeModif = (DemandeModif) demande;
         try (BufferedReader reader = ReaderFactory.createBufferedReader(file)){
             String line;
@@ -56,24 +56,59 @@ public class LigneFichierModifService implements ILigneFichierService {
 
             int position = 0;
 
-            while ((line = reader.readLine()) != null){
-                DemandeModif tDemandeModif = new DemandeModif(demandeModif.getNumDemande(), demandeModif.getRcr(), demandeModif.getDateCreation(), demandeModif.getDateModification(), demandeModif.getZone(), demandeModif.getSousZone(), demandeModif.getCommentaire(), demandeModif.getEtatDemande(), demandeModif.getUtilisateur(), demandeModif.getTraitement());
-                Pattern regexp = Pattern.compile(Constant.LIGNE_FICHIER_SERVICE_PATTERN);
+            while ((line = reader.readLine()) != null) {
+                DemandeModif tDemandeModif = new DemandeModif(demandeModif.getNumDemande(), demandeModif.getRcr(),
+                        demandeModif.getDateCreation(), demandeModif.getDateModification(), demandeModif.getZone(),
+                        demandeModif.getSousZone(), demandeModif.getCommentaire(), demandeModif.getEtatDemande(),
+                        demandeModif.getUtilisateur(), demandeModif.getTraitement());
+
+                Pattern regexp = Pattern.compile("\\s*(?<ppn>\\d{1,9}X?)\\s*;\\s*(?<rcr>\\d{8,9})\\s*;\\s*(?<epn>\\d{1,9}X?)\\s*;\\s*(?<valeur>.*)\\s*");
                 Matcher colsFinded = regexp.matcher(line);
+
                 String ppn = "";
                 String rcr = "";
                 String epn = "";
                 String valeur = "";
+
                 while (colsFinded.find()) {
-                    if (colsFinded.group("ppn") != null)
-                        ppn = Utilitaires.addZeros(colsFinded.group("ppn"), Constant.TAILLEMAX);
-                    if (colsFinded.group("rcr") != null)
-                        rcr = Utilitaires.addZeros(colsFinded.group("rcr"), Constant.TAILLEMAX);
-                    if (colsFinded.group("epn") != null)
-                        epn = Utilitaires.addZeros(colsFinded.group("epn"), Constant.TAILLEMAX);
-                    if (colsFinded.group("valeur") != null)
-                        valeur = colsFinded.group("valeur");
+                    if (colsFinded.group("ppn") != null) {
+                        ppn = colsFinded.group("ppn").trim();
+                        // Ajout des zéros à gauche pour ppn (max 9 caractères)
+                        ppn = String.format("%9s", ppn).replace(' ', '0');
+                        // Si le dernier caractère est X, on le conserve à la fin
+                        if (ppn.length() > 9 && ppn.charAt(8) != 'X' && ppn.charAt(9) == 'X') {
+                            ppn = ppn.substring(0, 9) + "X";
+                        } else if (ppn.length() > 9) {
+                            ppn = ppn.substring(0, 9);
+                        }
+                    }
+
+                    if (colsFinded.group("rcr") != null) {
+                        rcr = colsFinded.group("rcr").trim();
+                        // Ajout des zéros à gauche pour rcr (9 caractères exactement)
+                        rcr = String.format("%9s", rcr).replace(' ', '0');
+                        if (rcr.length() > 9) {
+                            rcr = rcr.substring(0, 9);
+                        }
+                    }
+
+                    if (colsFinded.group("epn") != null) {
+                        epn = colsFinded.group("epn").trim();
+                        // Ajout des zéros à gauche pour epn (max 9 caractères)
+                        epn = String.format("%9s", epn).replace(' ', '0');
+                        // Si le dernier caractère est X, on le conserve à la fin
+                        if (epn.length() > 9 && epn.charAt(8) != 'X' && epn.charAt(9) == 'X') {
+                            epn = epn.substring(0, 9) + "X";
+                        } else if (epn.length() > 9) {
+                            epn = epn.substring(0, 9);
+                        }
+                    }
+
+                    if (colsFinded.group("valeur") != null) {
+                        valeur = colsFinded.group("valeur").trim();
+                    }
                 }
+
                 LigneFichierModif lf = new LigneFichierModif(ppn, rcr, epn, valeur, position++, 0, "", tDemandeModif);
                 dao.save(lf);
             }
