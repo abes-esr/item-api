@@ -48,11 +48,11 @@ public class LigneFichierSuppService implements ILigneFichierService {
 
     @Override
     @Transactional
-    public void saveFile(File file, Demande demande) {
+    public void saveFileAndPutLignesFichierInDatabase(File file, Demande demande) {
         DemandeSupp demandeSupp = (DemandeSupp) demande;
         try (BufferedReader reader = ReaderFactory.createBufferedReader(file)) {
             String line;
-            String firstLine = reader.readLine(); //ne pas prendre en compte la première ligne avec les en-tête
+            String firstLine = reader.readLine(); // ne pas prendre en compte la première ligne avec les en-têtes
 
             if (firstLine == null) {
                 log.error(Constant.ERROR_FIRST_LINE_OF_FILE_NULL);
@@ -60,20 +60,46 @@ public class LigneFichierSuppService implements ILigneFichierService {
 
             int position = 0;
             List<LigneFichierSupp> listToSave = new ArrayList<>();
+
+            // Pattern fonctionnel avec gestion des espaces
+            String lignePattern = "\\s*(?<ppn>\\d{1,9}X?)\\s*;\\s*(?<rcr>\\d{8,9})\\s*;\\s*(?<epn>\\d{1,9}X?)\\s*";
+            Pattern regexp = Pattern.compile(lignePattern);
+
             while ((line = reader.readLine()) != null) {
-                Pattern regexp = Pattern.compile(Constant.LIGNE_FICHIER_SERVICE_PATTERN_SANS_VALEUR);
                 Matcher colsFinded = regexp.matcher(line);
                 String ppn = "";
                 String rcr = "";
                 String epn = "";
-                while (colsFinded.find()) {
-                    if (colsFinded.group("ppn") != null)
-                        ppn = Utilitaires.addZeros(colsFinded.group("ppn"), Constant.TAILLEMAX);
-                    if (colsFinded.group("rcr") != null)
-                        rcr = Utilitaires.addZeros(colsFinded.group("rcr"), Constant.TAILLEMAX);
-                    if (colsFinded.group("epn") != null)
-                        epn = Utilitaires.addZeros(colsFinded.group("epn"), Constant.TAILLEMAX);
+
+                if (colsFinded.find()) {
+                    // Traitement PPN
+                    if (colsFinded.group("ppn") != null) {
+                        ppn = colsFinded.group("ppn").trim();
+                        ppn = String.format("%9s", ppn).replace(' ', '0');
+                        if (ppn.length() > 9) {
+                            ppn = ppn.substring(0, 9); // Tronquer à 9 caractères si nécessaire
+                        }
+                    }
+
+                    // Traitement RCR
+                    if (colsFinded.group("rcr") != null) {
+                        rcr = colsFinded.group("rcr").trim();
+                        rcr = String.format("%9s", rcr).replace(' ', '0');
+                        if (rcr.length() > 9) {
+                            rcr = rcr.substring(0, 9);
+                        }
+                    }
+
+                    // Traitement EPN
+                    if (colsFinded.group("epn") != null) {
+                        epn = colsFinded.group("epn").trim();
+                        epn = String.format("%9s", epn).replace(' ', '0');
+                        if (epn.length() > 9) {
+                            epn = epn.substring(0, 9);
+                        }
+                    }
                 }
+
                 LigneFichierSupp lf = new LigneFichierSupp(ppn, rcr, epn, position++, 0, "", demandeSupp);
                 listToSave.add(lf);
             }

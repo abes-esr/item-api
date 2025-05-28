@@ -159,7 +159,7 @@ public class DemandeSuppService extends DemandeService implements IDemandeServic
                 FichierInitialSupp fichierInitialSupp = (FichierInitialSupp) fichier;
                 fichierInitialSupp.supprimerRetourChariot();
             }
-            checkEtatDemande(demande);
+            checkEtatDemandeAndStoreLignesInDatabase(demande);
         } catch (FileCheckingException e) {
             storageService.delete(fichier.getFilename());
             throw e;
@@ -168,7 +168,7 @@ public class DemandeSuppService extends DemandeService implements IDemandeServic
         }
     }
 
-    private void checkEtatDemande(DemandeSupp demande) throws DemandeCheckingException, IOException, FileTypeException, FileCheckingException {
+    private void checkEtatDemandeAndStoreLignesInDatabase(DemandeSupp demande) throws DemandeCheckingException, IOException, FileTypeException, FileCheckingException {
         int etat = demande.getEtatDemande().getNumEtat();
         switch (etat) {
             case Constant.ETATDEM_PREPARATION -> preparerFichierEnPrep(demande);
@@ -178,7 +178,7 @@ public class DemandeSuppService extends DemandeService implements IDemandeServic
                 //appel méthode d'alimentation de la base avec les lignes du fichier
                 FichierEnrichiSupp fichier = (FichierEnrichiSupp) FichierFactory.getFichier(demande.getEtatDemande().getNumEtat(), TYPE_DEMANDE.SUPP);
 
-                ligneFichierService.saveFile(storageService.loadAsResource(fichier.getFilename()).getFile(), demande);
+                ligneFichierService.saveFileAndPutLignesFichierInDatabase(storageService.loadAsResource(fichier.getFilename()).getFile(), demande);
 
                 changeState(demande, Constant.ETATDEM_SIMULATION);
             }
@@ -196,7 +196,7 @@ public class DemandeSuppService extends DemandeService implements IDemandeServic
             fichierPrepare.trierLignesDeCorrespondances();
             demande.setEtatDemande(new EtatDemande(Constant.ETATDEM_PREPAREE));
             save(demande);
-            checkEtatDemande(demande);
+            checkEtatDemandeAndStoreLignesInDatabase(demande);
         }
     }
 
