@@ -117,7 +117,6 @@ public class Constant implements Serializable {
 	public static final String ERR_FILE_3COL_SUPP_ANY_LINE = "La ligne doit contenir trois colones";
 	public static final String ERR_FILE_ERRLINE = "Erreur ligne ";
 	public static final String ERR_FILE_LINE = "Ligne ";
-	public static final String ERR_FILE_ONLYONEPPN = "la ligne ne doit contenir qu'un ppn (sur 9 caractères).";
 	public static final String ERR_FILE_HEAD4TH = "La valeur en-tête de la quatrieme colonne n'est pas valide.";
 	public static final String ERR_FILE_LINELENGTH = " : Il y a un problème lié à la longueur de la ligne.";
 	public static final String ERR_FILE_TYPEFILE = "Type de fichier inconnu: ";
