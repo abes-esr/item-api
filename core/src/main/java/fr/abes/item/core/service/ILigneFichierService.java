@@ -27,7 +27,7 @@ public interface ILigneFichierService {
 
     int getNbReponseMultipleByDemande(Demande demande);
 
-    void saveFile(File file, Demande demande);
+    void saveFileAndPutLignesFichierInDatabase(File file, Demande demande);
 
     void deleteByDemande(Demande demande);
 

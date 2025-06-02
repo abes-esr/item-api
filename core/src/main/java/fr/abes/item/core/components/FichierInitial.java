@@ -61,8 +61,8 @@ public class FichierInitial extends AbstractFichier implements Fichier {
      */
     protected void checkBodyLine(String ligne) throws FileCheckingException {
         String lignesansespaces = ligne.trim();
-        if (lignesansespaces.length() != 9) {
-            throw new FileCheckingException(Constant.ERR_FILE_LINE + ligneCourante + " : " + Constant.ERR_FILE_ONLYONEPPN);
+        if (lignesansespaces.isEmpty()) {
+            throw new FileCheckingException(Constant.ERR_FILE_LINE + ligneCourante + " : " + "Absence de PPN");
         }
         ligneCourante++;
     }

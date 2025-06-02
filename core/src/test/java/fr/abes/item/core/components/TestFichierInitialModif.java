@@ -29,15 +29,6 @@ public class TestFichierInitialModif {
         assertTrue(assertThrows(FileCheckingException.class, () -> fic.checkFileContent(null)).getMessage().contains(Constant.ERR_FILE_TOOMUCH_START));
     }
 
-    @DisplayName("checkChampTropLong")
-    @Test
-    public void checkChampTropLong() {
-        FichierInitial fic = new FichierInitial("champTropLong.txt");
-        fic.setPath(Paths.get("src/test/resources/fichierInitial"));
-        assertTrue(assertThrows(FileCheckingException.class, () -> fic.checkFileContent(null))
-                .getMessage().contains("la ligne ne doit contenir qu'un ppn"));
-    }
-
     @DisplayName("cutFileMoinsde300")
     @Test
     public void cutFileMoinsde300() throws IOException {

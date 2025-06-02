@@ -88,7 +88,15 @@ public abstract class AbstractFichier {
      * @throws FileCheckingException : erreur de format de fichier
      */
     protected void checkRcr(String rcrFichier, String rcr, int ligneCourante) throws FileCheckingException {
-        if (!rcrFichier.equals(rcr)) {
+        if (rcrFichier == null || rcr == null) {
+            throw new FileCheckingException(Constant.ERR_FILE_LINE + ligneCourante + " : " + Constant.ERR_FILE_NULL_RCR);
+        }
+
+        // Nettoyage des espaces avant/après et normalisation des chaînes
+        String rcrFichierClean = rcrFichier.trim();
+        String rcrClean = rcr.trim();
+
+        if (!rcrFichierClean.equals(rcrClean)) {
             throw new FileCheckingException(Constant.ERR_FILE_LINE + ligneCourante + " : " + Constant.ERR_FILE_WRONGRCR);
         }
     }
