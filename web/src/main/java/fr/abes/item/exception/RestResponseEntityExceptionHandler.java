@@ -39,8 +39,14 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		if (t.getMessage().contains(Constant.ERR_FILE_TOOMUCH_START)) {
 			return buildResponseEntity(new ApiReturnError(HttpStatus.BAD_REQUEST, t.getMessage()));
 		} else {
+			log.error(String.valueOf(t instanceof FileCheckingException));
 			return buildResponseEntity(new ApiReturnError(HttpStatus.BAD_REQUEST, Constant.ERR_FILE_WRONGCONTENT, t));
 		}
+	}
+
+	@ExceptionHandler({ FileLineL035Exception.class })
+	public ResponseEntity<?> handleFileLineL035Failures(Throwable t) {
+		return buildResponseEntity(new ApiReturnError(HttpStatus.BAD_REQUEST, Constant.ERR_FILE_WRONGCONTENT_L035, new FileCheckingException(t.getMessage())));
 	}
 
 	@ExceptionHandler({ DemandeCheckingException.class })

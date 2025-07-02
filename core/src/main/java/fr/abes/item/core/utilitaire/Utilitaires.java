@@ -10,6 +10,7 @@ import fr.abes.item.core.constant.Constant;
 import fr.abes.item.core.constant.TYPE_DEMANDE;
 import fr.abes.item.core.exception.FileCheckingException;
 import fr.abes.item.core.exception.FileLineException;
+import fr.abes.item.core.exception.FileLineL035Exception;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -116,7 +117,7 @@ public class Utilitaires {
                 String[] columns = line.split(";", -1);
 
                 if (l035Position >= columns.length || columns[l035Position].trim().isEmpty()) {
-                    throw new FileLineException("Valeur L035 manquante à la ligne " + lineNumber);
+                    throw new FileLineL035Exception(lineNumber);
                 }
             }
         } finally {
