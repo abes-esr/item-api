@@ -11,10 +11,7 @@ import fr.abes.item.core.entities.item.Demande;
 import fr.abes.item.core.entities.item.DemandeExemp;
 import fr.abes.item.core.entities.item.EtatDemande;
 import fr.abes.item.core.entities.item.TypeExemp;
-import fr.abes.item.core.exception.DemandeCheckingException;
-import fr.abes.item.core.exception.FileCheckingException;
-import fr.abes.item.core.exception.FileLineException;
-import fr.abes.item.core.exception.FileTypeException;
+import fr.abes.item.core.exception.*;
 import fr.abes.item.core.repository.baseXml.ILibProfileDao;
 import fr.abes.item.core.repository.item.IDemandeExempDao;
 import fr.abes.item.core.repository.item.ILigneFichierExempDao;
@@ -173,6 +170,8 @@ public class DemandeExempService extends DemandeService implements IDemandeServi
             this.majDemandeWithFichierEnrichi(demandeExemp); //mise à jour de la demande avec les paramètres du fichier enrichi : index de recherche, liste des zones, ajout des lignes du fichier dans la BDD
         } catch (NullPointerException e) {
             throw new NullPointerException(Constant.ERR_FILE_NOT_FOUND);
+        } catch (FileLineL035Exception e) {
+            throw e;
         } catch (FileLineException e) {
             throw new FileCheckingException("Erreur: " + e);
         }

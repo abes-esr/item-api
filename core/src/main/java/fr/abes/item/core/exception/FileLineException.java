@@ -5,3 +5,4 @@ public class FileLineException extends Exception {
         super("probleme lors du traitement de la ligne du fichier : " + message);
     }
 }
+
