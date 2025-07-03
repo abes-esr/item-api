@@ -7,6 +7,7 @@ import fr.abes.item.core.entities.item.Demande;
 import fr.abes.item.core.entities.item.DemandeRecouv;
 import fr.abes.item.core.entities.item.LigneFichier;
 import fr.abes.item.core.entities.item.LigneFichierRecouv;
+import fr.abes.item.core.exception.FileLineDATWithTitleTooLongException;
 import fr.abes.item.core.exception.QueryToSudocException;
 import fr.abes.item.core.repository.item.ILigneFichierRecouvDao;
 import fr.abes.item.core.service.ILigneFichierService;
@@ -15,6 +16,7 @@ import fr.abes.item.core.utilitaire.Utilitaires;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.mozilla.universalchardet.ReaderFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -74,7 +76,7 @@ public class LigneFichierRecouvService implements ILigneFichierService {
     }
 
     @Override
-    public void saveFileAndPutLignesFichierInDatabase(File file, Demande demande) {
+    public void saveFileAndPutLignesFichierInDatabase(File file, Demande demande) throws FileLineDATWithTitleTooLongException {
         DemandeRecouv demandeRecouv = (DemandeRecouv) demande;
         try (BufferedReader reader = ReaderFactory.createBufferedReader(file)) {
             String line;
@@ -95,8 +97,9 @@ public class LigneFichierRecouvService implements ILigneFichierService {
                 LigneFichierRecouv ligneFichierRecouv = new LigneFichierRecouv(indexRecherche.toString(), 0, position++, null, demandeRecouv);
                 dao.save(ligneFichierRecouv);
             }
-        } catch (
-                IOException e) {
+        } catch (DataIntegrityViolationException e) {
+            throw new FileLineDATWithTitleTooLongException();
+        }catch (IOException e) {
             log.error(e.getMessage());
         }
     }
