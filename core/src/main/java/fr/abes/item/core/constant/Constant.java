@@ -107,6 +107,7 @@ public class Constant implements Serializable {
 	public static final String ERR_FILE_NOREQUESTS = "Le fichier ne contient pas de requêtes. Merci de consulter la documentation utilisateur à cette adresse : <a href=\"http://documentation.abes.fr/aideitem/index.html\" target=\"_blank\" style=\"color:white\">http://documentation.abes.fr/aideitem/index.html</a>";
 	public static final String ERR_FILE_WRONGCONTENT = "Erreur de traitement : Merci de vérifier la conformité de vos fichiers. En cas de difficultés, merci de consulter la documentation utilisateur à cette adresse : <a href=\"http://documentation.abes.fr/aideitem/index.html\" target=\"_blank\" style=\"color:white\">http://documentation.abes.fr/aideitem/index.html</a>";
 	public static final String ERR_FILE_WRONGCONTENT_L035 = "La zone L035 doit toujours contenir une valeur. Merci de corriger votre fichier.";
+	public static final String ERR_FILE_WRONGCONTENT_DATA_WITHTITLETOOLONG = "Présence de lignes dans votre fichier avec des titres qui excèdent 255 caractères.";
 	public static final String ERR_FILE_NOTRAIT = "Aucun traitement associé à la demande.";
 	public static final String ERR_FILE_TOOMUCH_START = "Le fichier dépasse la limite des ";
 	public static final String ERR_FILE_TOOMUCH_END = " lignes. Merci de consulter la documentation utilisateur à cette adresse : <a href=\"http://documentation.abes.fr/aideitem/index.html\" target=\"_blank\" style=\"color:white\">http://documentation.abes.fr/aideitem/index.html</a>";

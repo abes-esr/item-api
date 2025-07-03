@@ -12,6 +12,7 @@ import fr.abes.item.core.entities.item.DemandeSupp;
 import fr.abes.item.core.entities.item.EtatDemande;
 import fr.abes.item.core.exception.DemandeCheckingException;
 import fr.abes.item.core.exception.FileCheckingException;
+import fr.abes.item.core.exception.FileLineDATWithTitleTooLongException;
 import fr.abes.item.core.exception.FileTypeException;
 import fr.abes.item.core.repository.baseXml.ILibProfileDao;
 import fr.abes.item.core.repository.item.IDemandeSuppDao;
@@ -135,7 +136,7 @@ public class DemandeSuppService extends DemandeService implements IDemandeServic
     }
 
     @Override
-    public void stockerFichier(MultipartFile file, Demande demande) throws IOException, FileTypeException, FileCheckingException, DemandeCheckingException {
+    public void stockerFichier(MultipartFile file, Demande demande) throws IOException, FileTypeException, FileCheckingException, DemandeCheckingException, FileLineDATWithTitleTooLongException {
         try {
             Utilitaires.checkExtension(Objects.requireNonNull(file.getOriginalFilename()));
             Fichier fichier = FichierFactory.getFichier(demande.getEtatDemande().getNumEtat(), TYPE_DEMANDE.SUPP);
@@ -146,7 +147,7 @@ public class DemandeSuppService extends DemandeService implements IDemandeServic
         }
     }
 
-    private void stockerFichierOnDisk(MultipartFile file, Fichier fichier, DemandeSupp demande) throws IOException, FileCheckingException, DemandeCheckingException, FileTypeException {
+    private void stockerFichierOnDisk(MultipartFile file, Fichier fichier, DemandeSupp demande) throws IOException, FileCheckingException, DemandeCheckingException, FileTypeException, FileLineDATWithTitleTooLongException {
         Integer numDemande = demande.getNumDemande();
         try {
             storageService.changePath(Paths.get(uploadPath + "supp/" + numDemande));
@@ -168,7 +169,7 @@ public class DemandeSuppService extends DemandeService implements IDemandeServic
         }
     }
 
-    private void checkEtatDemandeAndStoreLignesInDatabase(DemandeSupp demande) throws DemandeCheckingException, IOException, FileTypeException, FileCheckingException {
+    private void checkEtatDemandeAndStoreLignesInDatabase(DemandeSupp demande) throws DemandeCheckingException, IOException, FileTypeException, FileCheckingException, FileLineDATWithTitleTooLongException {
         int etat = demande.getEtatDemande().getNumEtat();
         switch (etat) {
             case Constant.ETATDEM_PREPARATION -> preparerFichierEnPrep(demande);
@@ -185,7 +186,7 @@ public class DemandeSuppService extends DemandeService implements IDemandeServic
         }
     }
 
-    private void preparerFichierEnPrep(DemandeSupp demande) throws IOException, DemandeCheckingException, FileTypeException, FileCheckingException {
+    private void preparerFichierEnPrep(DemandeSupp demande) throws IOException, DemandeCheckingException, FileTypeException, FileCheckingException, FileLineDATWithTitleTooLongException {
         if (demande.getTypeSuppression() != null) {
             //Suppression d'un éventuel fichier existant sur le disque
             storageService.delete(fichierPrepare.getFilename());

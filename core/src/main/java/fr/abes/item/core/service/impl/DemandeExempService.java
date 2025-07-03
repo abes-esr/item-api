@@ -210,7 +210,7 @@ public class DemandeExempService extends DemandeService implements IDemandeServi
      * @throws IOException : erreur lecture fichier
      * @throws DemandeCheckingException : erreur dans la demande
      */
-    private void majDemandeWithFichierEnrichi(DemandeExemp demandeExemp) throws IOException, DemandeCheckingException {
+    private void majDemandeWithFichierEnrichi(DemandeExemp demandeExemp) throws IOException, DemandeCheckingException, FileLineDATWithTitleTooLongException {
         demandeExemp.setIndexRecherche(fichierEnrichiExemp.getIndexRecherche()); //Index de recherche
         demandeExemp.setListeZones(fichierEnrichiExemp.getValeurZones()); //Ligne d'entête sans l'index de recherche
         ligneFichierService.saveFileAndPutLignesFichierInDatabase(storageService.loadAsResource(fichierEnrichiExemp.getFilename()).getFile(), demandeExemp); //Construction des lignes d'exemplaires pour insertion en base sur table LIGNE_FICHIER_EXEMP

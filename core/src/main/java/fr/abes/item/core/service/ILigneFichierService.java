@@ -4,6 +4,7 @@ import fr.abes.cbs.exception.CBSException;
 import fr.abes.cbs.exception.ZoneException;
 import fr.abes.item.core.entities.item.Demande;
 import fr.abes.item.core.entities.item.LigneFichier;
+import fr.abes.item.core.exception.FileLineDATWithTitleTooLongException;
 import fr.abes.item.core.exception.QueryToSudocException;
 
 import java.io.File;
@@ -27,7 +28,7 @@ public interface ILigneFichierService {
 
     int getNbReponseMultipleByDemande(Demande demande);
 
-    void saveFileAndPutLignesFichierInDatabase(File file, Demande demande);
+    void saveFileAndPutLignesFichierInDatabase(File file, Demande demande) throws FileLineDATWithTitleTooLongException;
 
     void deleteByDemande(Demande demande);
 

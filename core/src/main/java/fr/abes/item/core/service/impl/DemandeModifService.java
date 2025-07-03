@@ -12,6 +12,7 @@ import fr.abes.item.core.entities.item.EtatDemande;
 import fr.abes.item.core.entities.item.Traitement;
 import fr.abes.item.core.exception.DemandeCheckingException;
 import fr.abes.item.core.exception.FileCheckingException;
+import fr.abes.item.core.exception.FileLineDATWithTitleTooLongException;
 import fr.abes.item.core.exception.FileTypeException;
 import fr.abes.item.core.repository.baseXml.ILibProfileDao;
 import fr.abes.item.core.repository.item.IDemandeModifDao;
@@ -105,7 +106,7 @@ public class DemandeModifService extends DemandeService implements IDemandeServi
      *
      * @param demandeModif demandeModif sur laquelle se porte la verification
      */
-    private void checkEtatDemande(DemandeModif demandeModif) throws IOException, FileTypeException, DemandeCheckingException {
+    private void checkEtatDemande(DemandeModif demandeModif) throws IOException, FileTypeException, DemandeCheckingException, FileLineDATWithTitleTooLongException {
         int etat = demandeModif.getEtatDemande().getNumEtat();
         switch (etat) {
             case Constant.ETATDEM_PREPARATION:
@@ -148,7 +149,7 @@ public class DemandeModifService extends DemandeService implements IDemandeServi
      *
      * @param dem : demandeModif liée aux fichiers à préparer
      */
-    private void preparerFichierEnPrep(DemandeModif dem) throws IOException, FileTypeException, DemandeCheckingException {
+    private void preparerFichierEnPrep(DemandeModif dem) throws IOException, FileTypeException, DemandeCheckingException, FileLineDATWithTitleTooLongException {
         //Suppression d'un éventuel fichier existant sur le disque
         storageService.delete(fichierPrepare.getFilename());
         //Ecriture ligne d'en-tête dans FichierApresWS
@@ -189,7 +190,7 @@ public class DemandeModifService extends DemandeService implements IDemandeServi
      * @param demande : demandeModif à laquelle est rattachée le fichier
      */
     @Override
-    public void stockerFichier(MultipartFile file, Demande demande) throws IOException, FileTypeException, FileCheckingException, DemandeCheckingException {
+    public void stockerFichier(MultipartFile file, Demande demande) throws IOException, FileTypeException, FileCheckingException, DemandeCheckingException, FileLineDATWithTitleTooLongException {
         try {
             Utilitaires.checkExtension(Objects.requireNonNull(file.getOriginalFilename()));
             Fichier fichier = FichierFactory.getFichier(demande.getEtatDemande().getNumEtat(), TYPE_DEMANDE.MODIF);
@@ -211,7 +212,7 @@ public class DemandeModifService extends DemandeService implements IDemandeServi
      * @throws IOException           demandeExemp.setExemplairesMultiplesAutorise("t");      fichier illisible
      * @throws FileTypeException     mauvais type de fichier
      */
-    private void stockerFichierOnDisk(MultipartFile file, Fichier fichier, DemandeModif demandeModif) throws FileCheckingException, IOException, FileTypeException, DemandeCheckingException {
+    private void stockerFichierOnDisk(MultipartFile file, Fichier fichier, DemandeModif demandeModif) throws FileCheckingException, IOException, FileTypeException, DemandeCheckingException, FileLineDATWithTitleTooLongException {
         Integer numDemande = demandeModif.getNumDemande();
         try {
             storageService.changePath(Paths.get(uploadPath + "modif/" + numDemande));
