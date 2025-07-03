@@ -12,6 +12,7 @@ import fr.abes.item.core.entities.item.DemandeRecouv;
 import fr.abes.item.core.entities.item.EtatDemande;
 import fr.abes.item.core.exception.DemandeCheckingException;
 import fr.abes.item.core.exception.FileCheckingException;
+import fr.abes.item.core.exception.FileLineDATWithTitleTooLongException;
 import fr.abes.item.core.exception.FileTypeException;
 import fr.abes.item.core.repository.baseXml.ILibProfileDao;
 import fr.abes.item.core.repository.item.IDemandeRecouvDao;
@@ -225,7 +226,7 @@ public class DemandeRecouvService extends DemandeService implements IDemandeServ
     }
 
     @Override
-    public void stockerFichier(MultipartFile file, Demande demande) throws IOException, FileTypeException, FileCheckingException, DemandeCheckingException {
+    public void stockerFichier(MultipartFile file, Demande demande) throws IOException, FileTypeException, FileCheckingException, DemandeCheckingException, FileLineDATWithTitleTooLongException {
         DemandeRecouv demandeRecouv = (DemandeRecouv) demande;
         try {
             Utilitaires.checkExtension(Objects.requireNonNull(file.getOriginalFilename()));
@@ -238,7 +239,7 @@ public class DemandeRecouvService extends DemandeService implements IDemandeServ
         }
     }
 
-    private void majDemandeWithFichierEnrichi(DemandeRecouv demandeRecouv) throws DemandeCheckingException, IOException {
+    private void majDemandeWithFichierEnrichi(DemandeRecouv demandeRecouv) throws DemandeCheckingException, IOException, FileLineDATWithTitleTooLongException {
         demandeRecouv.setIndexRecherche(fichierEnrichiRecouv.getIndexRecherche());
         ligneFichierService.saveFileAndPutLignesFichierInDatabase(storageService.loadAsResource(fichierEnrichiRecouv.getFilename()).getFile(), demandeRecouv);
         demandeRecouvDao.save(demandeRecouv);
