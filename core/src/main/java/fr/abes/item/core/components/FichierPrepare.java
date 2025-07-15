@@ -84,8 +84,7 @@ public class FichierPrepare extends AbstractFichier implements Fichier {
 			Multimap<String, String> resJson = Utilitaires.parseJson(input, false);
 
 			for (String ppn : tabppn) {
-				ppn = ppn.trim(); // Sécurité PPN
-				String ppnFormatted = String.format("%9s", ppn).replace(' ', '0');
+				String ppnFormatted = String.format("%9s", ppn).replace(' ', '0').trim();
 				if (resJson.containsKey(ppnFormatted)) {
 					for (String epn : resJson.get(ppnFormatted)) {
 						// Nettoyage de l'EPN
