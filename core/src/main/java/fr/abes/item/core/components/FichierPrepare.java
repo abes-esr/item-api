@@ -85,14 +85,15 @@ public class FichierPrepare extends AbstractFichier implements Fichier {
 
 			for (String ppn : tabppn) {
 				ppn = ppn.trim(); // Sécurité PPN
-				if (resJson.containsKey(ppn)) {
-					for (String epn : resJson.get(ppn)) {
+				String ppnFormatted = String.format("%9s", ppn).replace(' ', '0');
+				if (resJson.containsKey(ppnFormatted)) {
+					for (String epn : resJson.get(ppnFormatted)) {
 						// Nettoyage de l'EPN
 						epn = epn != null ? epn.trim() : "";
-						out.println(ppn + ";" + rcr + ";" + epn + ";");
+						out.println(ppnFormatted + ";" + rcr + ";" + epn + ";");
 					}
 				} else {
-					out.println(ppn + ";" + rcr + ";;");
+					out.println(ppnFormatted + ";" + rcr + ";;");
 				}
 			}
 		} catch (IOException ex) {
