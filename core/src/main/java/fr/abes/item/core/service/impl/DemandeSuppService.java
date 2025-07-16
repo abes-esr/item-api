@@ -210,14 +210,16 @@ public class DemandeSuppService extends DemandeService implements IDemandeServic
      */
     private void appelProcStockee(String rcr, TYPE_SUPPRESSION type) throws IOException {
         if (type.equals(TYPE_SUPPRESSION.PPN)) {
-            List<String> listppn = fichierInit.cutFile();
-            for (String listePpn : listppn) {
-                String resultProcStockee = procStockeePpnToEpn.callFunction(listePpn, rcr);
-                fichierPrepare.alimenterEpn(resultProcStockee, listePpn, rcr);
+            List<String> listPpn = fichierInit.cutFile();
+            for (String listeppn : listPpn) {
+                listeppn = listeppn.replace(" ", "");
+                String resultProcStockee = procStockeePpnToEpn.callFunction(listeppn, rcr);
+                fichierPrepare.alimenterEpn(resultProcStockee, listeppn, rcr);
             }
         } else {
             List<String> listEpn = fichierInit.cutFile();
             for (String listeepn : listEpn) {
+                listeepn = listeepn.replace(" ", "");
                 String resultProcStockee = procStockeeEpnToPpn.callFunction(listeepn, rcr);
                 fichierPrepare.alimenterPpn(resultProcStockee, listeepn, rcr);
             }

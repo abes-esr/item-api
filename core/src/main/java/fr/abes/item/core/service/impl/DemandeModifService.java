@@ -267,6 +267,7 @@ public class DemandeModifService extends DemandeService implements IDemandeServi
     private void appelProcStockee(String rcr) throws IOException {
         List<String> listppn = fichierInit.cutFile();
         for (String listeppn : listppn) {
+            listeppn = listeppn.replace(" ", "");
             String resultProcStockee = procStockee.callFunction(listeppn, rcr);
             fichierPrepare.alimenterEpn(resultProcStockee, listeppn, rcr);
         }
