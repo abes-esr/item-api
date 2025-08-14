@@ -112,6 +112,9 @@ public class FichierEnrichiExemp extends AbstractFichier implements Fichier {
             this.checkMandatoryZones(newLine.toString(), demande.getTypeExemp());
             while ((ligne = bufLecteur.readLine()) != null) { //LIGNES EXEMPLAIRES Tant qu'il y a des lignes à lire dans le fichier
                 Utilitaires.isValidUtf8(ligne);
+                ligne = ligne.trim();
+                ligne = ligne.replace("; ", ";");
+                ligne = ligne.replace(" ;", ";");
                 this.checkAnormalLineOfExemplary(ligneCourantePositionNumber, ligne); //Détecte une ligne de données vide
                 checkBodyLine(ligne); //controle adequation taille entete taille ligne exemplaire, controle champ vide, controle format de la date pour un index en Date | Auteur | Titre
                 ligneCourantePositionNumber++; //pointeur sur ligne en cours d'analyse dans fichier
