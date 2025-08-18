@@ -6,6 +6,7 @@ import fr.abes.item.core.constant.TYPE_DEMANDE;
 import fr.abes.item.core.entities.item.Demande;
 import fr.abes.item.core.exception.FileCheckingException;
 import fr.abes.item.core.exception.StorageException;
+import fr.abes.item.core.utilitaire.Utilitaires;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +25,13 @@ import java.nio.file.Path;
 public class FichierSauvegardeSuppTxt extends AbstractFichier implements Fichier {
 
     public void writePpnInFile(String ppn, Exemplaire exemplaire) throws StorageException {
+        String convertedExemplaire = Utilitaires.convertCrToCrLf(exemplaire.toString());
         try (FileWriter fw = new FileWriter(this.getPath().resolve(this.getFilename()).toString(), true);
              BufferedWriter bw = new BufferedWriter(fw);
              PrintWriter out = new PrintWriter(bw)) {
-            out.println("PPN " + ppn);
-            out.print("\n");
-            out.println(exemplaire);
-            out.println("\n");
+            out.print("PPN " + ppn + "\r\n");
+            out.print(convertedExemplaire);
+            out.print("\r\n");
         } catch (IOException ex) {
             throw new StorageException("Impossible d'écrire dans le fichier de sauvegarde txt");
         }

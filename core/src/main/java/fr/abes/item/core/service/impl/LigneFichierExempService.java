@@ -87,6 +87,9 @@ public class LigneFichierExempService implements ILigneFichierService {
                 if (line.lastIndexOf(';') == line.length() - 1) {
                     line += (char)0;
                 }
+                line = line.trim();
+                line = line.replace(" ;", ";");
+                line = line.replace("; ", ";");
                 String [] tabLine = line.split(";");
                 for (int i = 0; i < demandeExemp.getIndexRecherche().getIndexZones();i++) {
                     indexRecherche.append(tabLine[i]).append(";");
