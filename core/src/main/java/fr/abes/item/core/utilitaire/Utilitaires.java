@@ -437,4 +437,18 @@ public class Utilitaires {
         }
     }
 
+    /**
+     * Remplace tous les retours chariot simples (\r) par des retours chariot
+     * suivis d'un saut de ligne (\r\n) dans une chaîne de caractères.
+     *
+     * @param input La chaîne à transformer
+     * @return La chaîne transformée
+     */
+    public static String convertCrToCrLf(String input) {
+        if (input == null) {
+            return null;
+        }
+        return input.replace("\r", "\r\n");
+    }
+
 }
