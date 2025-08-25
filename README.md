@@ -3,7 +3,7 @@
 [![build-test-pubtodockerhub](https://github.com/abes-esr/item-api/actions/workflows/build-test-pubtodockerhub.yml/badge.svg)](https://github.com/abes-esr/item-api/actions/workflows/build-test-pubtodockerhub.yml) [![Docker Pulls](https://img.shields.io/docker/pulls/abesesr/item.svg)](https://hub.docker.com/r/abesesr/item/)
 
 Vous êtes sur le README usager. Si vous souhaitez accéder au README développement,
-veuillez suivre ce lien : [README-developpement](README-developpement.md)
+veuillez suivre ce lien : [README-dev](README-dev.md)
 
 Ce dépôt héberge le code source de l'API de Item.  
 Cette API fonctionne avec son interface utilisateur développée en VueJS (front) : https://github.com/abes-esr/item-client/  
