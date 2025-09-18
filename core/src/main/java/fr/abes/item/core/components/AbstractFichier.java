@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -107,7 +108,7 @@ public abstract class AbstractFichier {
      * @throws FileCheckingException : erreur de format de fichier
      */
     protected void checkPpn(String ppn, int ligneCourante) throws FileCheckingException {
-        if (!ppn.trim().matches("^([0-9]{0,8}[Xx]|[0-9]{1,9})$")){
+        if (!Objects.equals(ppn, "") && !ppn.trim().matches("^([0-9]{0,8}[Xx]|[0-9]{1,9})$")){
             throw new FileCheckingException(Constant.ERR_FILE_LINE + ligneCourante + " : " + Constant.ERR_FILE_WRONGPPN);
         }
     }
