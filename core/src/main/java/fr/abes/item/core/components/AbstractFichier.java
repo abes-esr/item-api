@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -107,9 +108,17 @@ public abstract class AbstractFichier {
      * @throws FileCheckingException : erreur de format de fichier
      */
     protected void checkPpn(String ppn, int ligneCourante) throws FileCheckingException {
-        if (!ppn.trim().matches("^([0-9]{0,8}[Xx]|[0-9]{1,9})$")){
+        if (isExist(ppn) && isPpnOrEpnPatternInvalid(ppn)){
             throw new FileCheckingException(Constant.ERR_FILE_LINE + ligneCourante + " : " + Constant.ERR_FILE_WRONGPPN);
         }
+    }
+
+    private static boolean isPpnOrEpnPatternInvalid(String ppn) {
+        return !ppn.trim().matches("^([0-9]{0,8}[Xx]|[0-9]{1,9})$");
+    }
+
+    private static boolean isExist(String ppn) {
+        return !Objects.equals(ppn, "");
     }
 
     /**
@@ -118,7 +127,7 @@ public abstract class AbstractFichier {
      * @throws FileCheckingException: erreur de format de l'epn
      */
     protected void checkEpn(String epn, int ligneCourante) throws FileCheckingException {
-        if (!epn.trim().matches("^([0-9]{0,8}[Xx]|[0-9]{1,9})$")) {
+        if (isPpnOrEpnPatternInvalid(epn)) {
             throw new FileCheckingException(Constant.ERR_FILE_LINE + ligneCourante + " : " + Constant.ERR_FILE_WRONGEPN);
         }
     }

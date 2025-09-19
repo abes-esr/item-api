@@ -1,4 +1,4 @@
-# item-api
+# Documentation développeur de item-api
 
 Le langage utilisé est Java, avec le framework Spring. 
 
