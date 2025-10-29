@@ -83,4 +83,38 @@ public interface ILigneFichierRecouvDao extends JpaRepository<LigneFichierRecouv
     @Query("select count(lf) from LigneFichierRecouv lf where lf.demandeRecouv.numDemande = :numDemande and lf.traitee = 1 and lf.nbReponses != 0")
     int getNbReponseTrouveesByDemande(@Param("numDemande") Integer numDemande);
 
+    /**
+     * @param numDemande numero demande
+     * @return nb reponses = 1 ppn
+     */
+    @Query("select count(lf) from LigneFichierRecouv lf " +
+            "where lf.demandeRecouv.numDemande = :numDemande " +
+            "and lf.traitee = 1 " +
+            "and lf.nbReponses != 0 " +
+            "and lf.listePpn is not null " +
+            "and lf.listePpn != '' " +
+            "and lf.listePpn != '[NULL]' " +
+            "and length(lf.listePpn) - length(replace(lf.listePpn, ',', '')) = 0")
+    int getNbUneReponseByDemande(@Param("numDemande") Integer numDemande);
+
+    /**
+     * @param numDemande numéro demande
+     * @return nb reponses > 1 ppn
+     */
+    @Query("select count(lf) from LigneFichierRecouv lf " +
+            "where lf.demandeRecouv.numDemande = :numDemande " +
+            "and lf.traitee = 1 " +
+            "and lf.nbReponses != 0 " +
+            "and length(lf.listePpn) - length(replace(lf.listePpn, ',', '')) >= 1")
+    int getNbReponsesAvecPlusieursPpnByDemande(@Param("numDemande") Integer numDemande);
+
+    /**
+     * @param numDemande numéro demande
+     * @return nb réponses = 0
+     */
+    @Query("select count(lf) from LigneFichierRecouv lf " +
+            "where lf.demandeRecouv.numDemande = :numDemande " +
+            "and lf.traitee = 1 " +
+            "and (lf.listePpn is null or lf.listePpn = '')")
+    int getNbReponsesSansPpnByDemande(@Param("numDemande") Integer numDemande);
 }
