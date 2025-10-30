@@ -134,17 +134,17 @@ public class LigneFichierRecouvService implements ILigneFichierService {
 
     @Override
     public int getNbZeroReponseByDemande(Demande demande) {
-        return 0;
+        return dao.getNbReponsesSansPpnByDemande(demande.getId());
     }
 
     @Override
     public int getNbUneReponseByDemande(Demande demande) {
-        return 0;
+        return dao.getNbUneReponseByDemande(demande.getId());
     }
 
     @Override
     public int getNbReponseMultipleByDemande(Demande demande) {
-        return 0;
+        return dao.getNbReponsesAvecPlusieursPpnByDemande(demande.getId());
     }
 
     public int launchQueryToSudoc(String codeIndex, String valeurs) throws IOException, QueryToSudocException {
