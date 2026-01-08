@@ -62,7 +62,7 @@ public class LigneFichierSuppService implements ILigneFichierService {
             List<LigneFichierSupp> listToSave = new ArrayList<>();
 
             // Pattern fonctionnel avec gestion des espaces
-            String lignePattern = "\\s*(?<ppn>\\d{1,9}X?)\\s*;\\s*(?<rcr>\\d{8,9})\\s*;\\s*(?<epn>\\d{1,9}X?)\\s*";
+            String lignePattern = "\\s*(?<ppn>\\d{1,9}X?)?\\s*;\\s*(?<rcr>\\d{8,9})\\s*;\\s*(?<epn>\\d{1,9}X?)\\s*";
             Pattern regexp = Pattern.compile(lignePattern);
 
             while ((line = reader.readLine()) != null) {
