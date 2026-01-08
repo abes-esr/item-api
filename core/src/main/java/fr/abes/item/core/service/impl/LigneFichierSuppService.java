@@ -100,7 +100,6 @@ public class LigneFichierSuppService implements ILigneFichierService {
                     }
                 }
 
-                log.error(ppn, rcr, epn);
                 LigneFichierSupp lf = new LigneFichierSupp(ppn, rcr, epn, position++, 0, "", demandeSupp);
                 listToSave.add(lf);
             }
