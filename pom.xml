@@ -202,7 +202,6 @@
                     <configuration>
                         <layers>
                             <enabled>true</enabled>
-                            <includeLayerTools>true</includeLayerTools>
                         </layers>
                         <mainClass>fr.abes.item.ModifDeMasseApplication</mainClass>
                     </configuration>
