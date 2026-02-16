@@ -26,6 +26,8 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
@@ -62,10 +64,24 @@ class DemandeRestServiceTest {
     List<DemandeDto> demandeDto = new ArrayList<>();
 
     MockMvc mockMvc;
+    private static final Validator NO_OP_VALIDATOR = new Validator() {
+        @Override
+        public boolean supports(Class<?> clazz) {
+            return true;
+        }
+
+        @Override
+        public void validate(Object target, Errors errors) {
+            // No-op validator for controller tests in offline env
+        }
+    };
 
     @BeforeEach
     void init() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(context.getBean(DemandeRestService.class)).setControllerAdvice(new RestResponseEntityExceptionHandler()).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(context.getBean(DemandeRestService.class))
+                .setControllerAdvice(new RestResponseEntityExceptionHandler())
+                .setValidator(NO_OP_VALIDATOR)
+                .build();
         Calendar cal = Calendar.getInstance();
         DemandeExemp demande1 = new DemandeExemp(1);
         cal.set(2024, Calendar.APRIL, 15);
@@ -92,7 +108,7 @@ class DemandeRestServiceTest {
     @WithMockUser(authorities = {"ADMIN"})
     void testGetAllActiveDemandesForAdmin() throws Exception {
         Mockito.when(demandeExempService.getAllActiveDemandesForAdminExtended()).thenReturn(this.demandeDto);
-        this.mockMvc.perform(get("/api/v1/demandes/EXEMP/?archive=false&extension=true").requestAttr("iln", "1"))
+        this.mockMvc.perform(get("/api/v1/demandes/EXEMP?archive=false&extension=true").requestAttr("iln", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value("1"))
                 .andExpect(jsonPath("$[0].rcr").value("111111111"))
@@ -107,7 +123,7 @@ class DemandeRestServiceTest {
     @WithMockUser(authorities = {"ADMIN"})
     void testGetAllActiveDemandesForAdminExtender() throws Exception {
         Mockito.when(demandeExempService.getAllActiveDemandesForAdmin("1")).thenReturn(this.demandeDto);
-        this.mockMvc.perform(get("/api/v1/demandes/EXEMP/?archive=false&extension=false").requestAttr("iln", "1"))
+        this.mockMvc.perform(get("/api/v1/demandes/EXEMP?archive=false&extension=false").requestAttr("iln", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value("1"))
                 .andExpect(jsonPath("$[0].rcr").value("111111111"))
@@ -119,7 +135,7 @@ class DemandeRestServiceTest {
     @WithMockUser(authorities = {"USER"})
     void testChercher() throws Exception {
         Mockito.when(demandeExempService.getActiveDemandesForUser("1")).thenReturn(this.demandeDto);
-        this.mockMvc.perform(get("/api/v1/demandes/EXEMP/?archive=false&extension=true").requestAttr("iln", "1"))
+        this.mockMvc.perform(get("/api/v1/demandes/EXEMP?archive=false&extension=true").requestAttr("iln", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value("1"))
                 .andExpect(jsonPath("$[0].rcr").value("111111111"))

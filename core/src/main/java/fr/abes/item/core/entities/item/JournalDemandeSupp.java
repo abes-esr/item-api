@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -41,3 +41,4 @@ public class JournalDemandeSupp implements Serializable, GenericEntity<Integer> 
         return numJournal;
     }
 }
+
