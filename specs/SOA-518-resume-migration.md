@@ -104,3 +104,26 @@ Etape suivante a lancer:
 1. Docker/CI Java 21 de bout en bout.
 2. Puis smoke tests metier cibles (auth JWT, endpoints principaux, batch mail/stats).
 3. Ensuite revue securite finale (SBOM + scan CVE) avant merge.
+
+## Etape 4 - Docker/CI JDK 21 (en cours)
+
+Changements deja prepares:
+- `Dockerfile` migre JDK21 pour build + runtime API + runtime batch.
+- Runtime batch base image alignee sur `rockylinux:9` pour compatibilite `java-21-openjdk`.
+- Fuseau batch corrige en `Europe/Paris`.
+- Nouveau workflow manuel de publication test Docker Hub:
+  - `.github/workflows/dockerhub-jdk21-test-publish.yml`
+  - input `test_tag`
+  - push de deux tags temporaires:
+    - `<prefix>:<test_tag>-api`
+    - `<prefix>:<test_tag>-batch`
+
+Validation locale:
+- Daemon Docker local indisponible pendant le test.
+- Validation operationnelle a faire via GitHub Actions (workflow_dispatch) ou serveur avec Docker actif.
+
+## Prochaine action immediate
+
+1. Push branche `soa-518-step4-docker-jdk21`.
+2. Lancer le workflow `dockerhub-jdk21-test-publish` avec un tag de test.
+3. Deployer ces tags sur serveur distant pour smoke test runtime.

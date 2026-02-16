@@ -143,3 +143,34 @@ Contexte local a ignorer pour le commit migration:
 
 Prochaine action prevue avec l'utilisateur:
 - Commit detaille des changements de l'etape 3.
+
+## 7) Etape 4 lancee (Docker/CI JDK 21)
+
+Branche dediee creee:
+- `soa-518-step4-docker-jdk21`
+
+Modifications appliquees:
+- `Dockerfile`
+  - `build-image`: `maven:3-eclipse-temurin-17` -> `maven:3-eclipse-temurin-21`
+  - `api-image`: `tomcat:9-jdk17` -> `eclipse-temurin:21-jre`
+  - `batch-builder`: `maven:3-eclipse-temurin-17` -> `maven:3-eclipse-temurin-21`
+  - `batch-image`: `rockylinux:8` -> `rockylinux:9`
+  - runtime Java batch: `java-17-openjdk` -> `java-21-openjdk`
+  - correction timezone batch: `Europe/London` -> `Europe/Paris`
+
+- Nouveau workflow:
+  - `.github/workflows/dockerhub-jdk21-test-publish.yml`
+  - declenchement manuel (`workflow_dispatch`)
+  - input `test_tag`
+  - build/push Docker Hub des 2 images:
+    - `${DOCKERHUB_IMAGE_PREFIX}:${test_tag}-api`
+    - `${DOCKERHUB_IMAGE_PREFIX}:${test_tag}-batch`
+
+Validation locale Docker:
+- `docker --version` OK
+- Build local non valide pour cause environnement:
+  - erreur daemon: `//./pipe/dockerDesktopLinuxEngine ... file not found`
+  - interpretation: Docker Desktop/daemon non demarre sur le poste local au moment du test.
+
+Impact sur la suite:
+- La verification de build/publish se fera via GitHub Actions (workflow manuel) ou sur une machine avec daemon Docker actif.
