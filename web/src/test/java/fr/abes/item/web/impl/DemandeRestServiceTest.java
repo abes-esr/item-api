@@ -21,7 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -44,15 +44,15 @@ class DemandeRestServiceTest {
     WebApplicationContext context;
     @InjectMocks
     DemandeRestService controller;
-    @MockBean
+    @MockitoBean
     DemandeExempService demandeExempService;
-    @MockBean
+    @MockitoBean
     DemandeModifService demandeModifService;
-    @MockBean
+    @MockitoBean
     DemandeSuppService demandeSuppService;
-    @MockBean
+    @MockitoBean
     LigneFichierExempService ligneFichierExempService;
-    @MockBean
+    @MockitoBean
     CheckAccessToServices checkAccessToServices;
     @Autowired
     StrategyFactory strategy;
@@ -391,3 +391,4 @@ class DemandeRestServiceTest {
                 .andExpect(jsonPath("$").value(30));
     }
 }
+
