@@ -42,3 +42,6 @@ hibernate.cfg.xml
 .vscode/launch.json
 .vscode/settings.json
 amplicode.xml
+
+# Local incident investigation config
+incident-prod.local.yaml
