@@ -20,6 +20,9 @@
         <maven.compiler.target>21</maven.compiler.target>
         <spring.boot.version>3.5.10</spring.boot.version>
         <mockito.version>5.17.0</mockito.version>
+        <jjwt.version>0.13.0</jjwt.version>
+        <springdoc.version>2.8.15</springdoc.version>
+        <httpclient5.version>5.5.2</httpclient5.version>
         <argLine></argLine>
         <warName>item-api</warName>
         <webBaseDir>./target</webBaseDir>
