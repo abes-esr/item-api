@@ -88,6 +88,8 @@ RUN dnf install -y tzdata && \
 
 COPY ./docker/batch/itemBatchArchiverDemandesPlusDeTroisMois.sh /scripts/itemBatchArchiverDemandesPlusDeTroisMois.sh
 RUN chmod +x /scripts/itemBatchArchiverDemandesPlusDeTroisMois.sh
+COPY ./docker/batch/itemBatchDemandesPlusDeTroisMois.sh /scripts/itemBatchDemandesPlusDeTroisMois.sh
+RUN chmod +x /scripts/itemBatchDemandesPlusDeTroisMois.sh
 COPY ./docker/batch/itemBatchExportStatistiques.sh /scripts/itemBatchExportStatistiques.sh
 RUN chmod +x /scripts/itemBatchExportStatistiques.sh
 COPY ./docker/batch/itemBatchStatutSupprimeDemandesPlusDeTroisMois.sh /scripts/itemBatchStatutSupprimeDemandesPlusDeTroisMois.sh
