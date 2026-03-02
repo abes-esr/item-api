@@ -382,7 +382,9 @@ public class DemandeSuppService extends DemandeService implements IDemandeServic
 
     @Override
     public List<? extends Demande> getDemandesToDelete() {
-        List<DemandeSupp> listeDemandes = demandeSuppDao.getNextDemandeToDelete();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -370);
+        List<DemandeSupp> listeDemandes = demandeSuppDao.getNextDemandeToDeleteBefore(calendar.getTime());
         if (!listeDemandes.isEmpty())
             return listeDemandes;
         return null;

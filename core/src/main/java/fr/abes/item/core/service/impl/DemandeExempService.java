@@ -394,7 +394,9 @@ public class DemandeExempService extends DemandeService implements IDemandeServi
      */
     @Override
     public List<DemandeExemp> getDemandesToDelete() {
-        List<DemandeExemp> listeDemandes = demandeExempDao.getNextDemandeToDelete();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -370);
+        List<DemandeExemp> listeDemandes = demandeExempDao.getNextDemandeToDeleteBefore(calendar.getTime());
         if (!listeDemandes.isEmpty())
             return listeDemandes;
         return null;

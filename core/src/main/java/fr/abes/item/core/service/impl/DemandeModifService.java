@@ -503,7 +503,9 @@ public class DemandeModifService extends DemandeService implements IDemandeServi
      */
     @Override
     public List<DemandeModif> getDemandesToDelete() {
-        List<DemandeModif> listeDemandes = demandeModifDao.getNextDemandeToDelete();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -370);
+        List<DemandeModif> listeDemandes = demandeModifDao.getNextDemandeToDeleteBefore(calendar.getTime());
         if (!listeDemandes.isEmpty())
             return listeDemandes;
         return null;
