@@ -1,0 +1,41 @@
+name: "dockerhub-jdk21-test-publish"
+
+env:
+  DOCKERHUB_IMAGE_PREFIX: abesesr/item
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_tag:
+        description: "Tag temporaire de test (ex: soa518-jdk21-rc1)"
+        required: true
+        type: string
+
+jobs:
+  publish-test-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout source code"
+        uses: actions/checkout@v4
+
+      - name: "Validate test tag format"
+        run: |
+          echo "${{ inputs.test_tag }}" | grep -E '^[a-zA-Z0-9._-]+$'
+
+      - name: "Login to DockerHub"
+        run: |
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: "Build and push API image (JDK21 test tag)"
+        run: |
+          API_TAG="${{ env.DOCKERHUB_IMAGE_PREFIX }}:${{ inputs.test_tag }}-api"
+          docker build . --target api-image -t "${API_TAG}"
+          docker push "${API_TAG}"
+          echo "Pushed ${API_TAG}"
+
+      - name: "Build and push Batch image (JDK21 test tag)"
+        run: |
+          BATCH_TAG="${{ env.DOCKERHUB_IMAGE_PREFIX }}:${{ inputs.test_tag }}-batch"
+          docker build . --target batch-image -t "${BATCH_TAG}"
+          docker push "${BATCH_TAG}"
+          echo "Pushed ${BATCH_TAG}"
