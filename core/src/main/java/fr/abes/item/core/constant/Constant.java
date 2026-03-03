@@ -136,6 +136,7 @@ public class Constant implements Serializable {
 	public static final String ERR_FILE_FORMAT = "Erreur de format de fichier : le fichier doit être au format .txt ou .csv.";
 	public static final String ERR_FILE_NOTICE_EPN_NUMBER = "Erreur de communication avec le serveur sur la récupération de la notice.";
 	public static final String ERR_FILE_NOTICE_NOT_FOUND = "Aucune notice ne correspond à la recherche.";
+	public static final String ERR_FILE_EPN_INEXISTANT_OR_ERRONE = "EPN inexistant ou erroné : traitement impossible";
 	public static final String ERR_FILE_MULTIPLES_NOTICES_FOUND = "Plusieurs PPN correspondent à la requête : ";
 	public static final String ERR_FILE_SEARCH_INDEX_NOT_COMPLIANT = "Impossible de générer la requête, l'index de recherche n'est pas conforme";
 	public static final String ERR_FILE_SEARCH_INDEX_NOT_RECOGNIZED_FOR_DEMANDE = "Index non reconnu pour ce type de demande";

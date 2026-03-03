@@ -12,6 +12,7 @@ import fr.abes.item.core.components.FichierSauvegardeSuppTxt;
 import fr.abes.item.core.configuration.factory.StrategyFactory;
 import fr.abes.item.core.constant.Constant;
 import fr.abes.item.core.constant.TYPE_DEMANDE;
+import fr.abes.item.core.constant.TYPE_SUPPRESSION;
 import fr.abes.item.core.dto.ExemplaireWithTypeDto;
 import fr.abes.item.core.entities.item.*;
 import fr.abes.item.core.exception.QueryToSudocException;
@@ -164,7 +165,18 @@ public class LignesFichierProcessor implements ItemProcessor<LigneFichierDto, Li
         if(demandeSupp.getEtatDemande().getId() != Constant.ETATDEM_INTERROMPUE) {
                 //récupération des exemplaires existants pour cette ligne
                 LigneFichierSuppService service = ((LigneFichierSuppService) strategyFactory.getStrategy(ILigneFichierService.class, TYPE_DEMANDE.SUPP));
-                ExemplaireWithTypeDto exemplaireWithType = service.getExemplairesAndTypeDoc(ligneFichierDtoSupp.getPpn());
+                ExemplaireWithTypeDto exemplaireWithType;
+                try {
+                    exemplaireWithType = service.getExemplairesAndTypeDoc(ligneFichierDtoSupp.getPpn());
+                } catch (QueryToSudocException ex) {
+                    // EPN suppression case: write explicit message in result file.
+                    if (demandeSupp.getTypeSuppression() == TYPE_SUPPRESSION.EPN
+                            && Constant.ERR_FILE_NOTICE_NOT_FOUND.equals(ex.getMessage())) {
+                        ligneFichierDtoSupp.setRetourSudoc(Constant.ERR_FILE_EPN_INEXISTANT_OR_ERRONE);
+                        return ligneFichierDtoSupp;
+                    }
+                    throw ex;
+                }
                 if (ligneFichierDtoSupp.getEpn() != null) {
                     Optional<Exemplaire> exemplaireASupprimerOpt = exemplaireWithType.getExemplaires().stream().filter(exemplaire -> exemplaire.findZone("A99", 0).getValeur().equals(ligneFichierDtoSupp.getEpn())).findFirst();
                     if (exemplaireASupprimerOpt.isPresent()) {
