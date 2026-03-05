@@ -7,8 +7,10 @@ set -euo pipefail
 
 LANG=fr_FR.UTF-8
 
-# Evite un chevauchement si une execution precedente est encore en cours.
-if [[ $(pgrep -cf "itemBatchDemandesPlusDeTroisMois.sh") -gt 1 ]]; then
+# Evite un chevauchement (fiable avec cron, sans faux positif sur le shell wrapper).
+LOCK_FILE="/tmp/itemBatchDemandesPlusDeTroisMois.lock"
+exec 9>"${LOCK_FILE}"
+if ! flock -n 9; then
   echo "Une execution de itemBatchDemandesPlusDeTroisMois est deja en cours, sortie."
   exit 0
 fi
