@@ -9,6 +9,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,11 +26,32 @@ import io.jsonwebtoken.security.Keys;
 @Component
 @Slf4j
 public class JwtTokenProvider {
+    private static final int HS512_MIN_KEY_LENGTH_BYTES = 64;
+
     @Value("${app.jwtSecret}")
     private String jwtSecret;
 
     @Value("${app.jwtExpirationInMs}")
     private int jwtExpirationInMs;
+
+    private SecretKey signingKey;
+
+    @PostConstruct
+    void initializeSigningKey() {
+        if (!StringUtils.hasText(jwtSecret)) {
+            throw new IllegalStateException("Configuration invalide: app.jwtSecret est vide. Une cle HS512 d'au moins 64 octets est requise.");
+        }
+
+        byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
+        if (keyBytes.length < HS512_MIN_KEY_LENGTH_BYTES) {
+            throw new IllegalStateException(String.format(
+                    "Configuration invalide: app.jwtSecret doit faire au moins %d octets pour HS512 (longueur actuelle: %d).",
+                    HS512_MIN_KEY_LENGTH_BYTES,
+                    keyBytes.length));
+        }
+
+        this.signingKey = Keys.hmacShaKeyFor(keyBytes);
+    }
 
     public String generateToken(User u) {
 
@@ -98,6 +120,6 @@ public class JwtTokenProvider {
     }
 
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+        return signingKey;
     }
 }
