@@ -13,10 +13,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
@@ -32,19 +34,33 @@ public class UtilisateurRestServiceTest {
     WebApplicationContext context;
     @InjectMocks
     UtilisateurRestService controller;
-    @MockBean
+    @MockitoBean
     UtilisateurService service;
-    @MockBean
+    @MockitoBean
     CheckAccessToServices checkAccessToServices;
     @Autowired
     DtoBuilder builder;
     @Autowired
     ObjectMapper mapper;
     MockMvc mockMvc;
+    private static final Validator NO_OP_VALIDATOR = new Validator() {
+        @Override
+        public boolean supports(Class<?> clazz) {
+            return true;
+        }
+
+        @Override
+        public void validate(Object target, Errors errors) {
+            // No-op validator for controller tests in offline env
+        }
+    };
 
     @BeforeEach
     void init() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(context.getBean(UtilisateurRestService.class)).setControllerAdvice(new RestResponseEntityExceptionHandler()).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(context.getBean(UtilisateurRestService.class))
+                .setControllerAdvice(new RestResponseEntityExceptionHandler())
+                .setValidator(NO_OP_VALIDATOR)
+                .build();
     }
 
     @Test
@@ -90,3 +106,4 @@ public class UtilisateurRestServiceTest {
                 .andExpect(jsonPath("$.message").value("Utilisateur inexistant"));
     }
 }
+

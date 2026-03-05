@@ -9,7 +9,7 @@ import fr.abes.item.core.service.ReferenceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ class FichierSauvegardeSuppCsvTest {
     @Autowired
     private FichierSauvegardeSuppCsv fichierSauvegardeSuppCsv;
 
-    @MockBean
+    @MockitoBean
     private ReferenceService referenceService;
 
     @Test
@@ -93,3 +93,4 @@ class FichierSauvegardeSuppCsvTest {
         assertNull(result);
     }
 }
+

@@ -5,12 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.abes.item.batch.mail.MailDto;
 import fr.abes.item.core.constant.Constant;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
@@ -75,8 +76,9 @@ public class Mailer {
         HttpEntity multipart = builder.build();
         uploadFile.setEntity(multipart);
 
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            httpClient.execute(uploadFile);
+        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+             CloseableHttpResponse ignored = httpClient.execute(uploadFile)) {
+            // no-op
         } catch (IOException e) {
             log.error(Constant.ERROR_ATTACHMENT_UNATTACHABLE + e);
         }

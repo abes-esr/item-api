@@ -34,7 +34,7 @@ public class SpringSecurityConfig {
                         .requestMatchers("/api/v1/checkToken").permitAll()
                         .requestMatchers("/api/v1/applicationDetails").permitAll()
                         .requestMatchers("/api/v1/applicationStatutServices").permitAll()
-                        .requestMatchers("/api/v1/v2/api-docs", "/api/v1/configuration/ui", "/api/v1/swagger-resources/**", "/api/v1/configuration/**", "/api/v1/swagger-ui.html", "/api/v1/webjars/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +21,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ReferenceServiceTest {
     @Autowired
     private ReferenceService referenceService;
-    @MockBean
+    @MockitoBean
     private IEtatDemandeDao etatDemandeDao;
-    @MockBean
+    @MockitoBean
     private ITypeExempDao typeExempDao;
-    @MockBean
+    @MockitoBean
     private ITraitementDao traitementDao;
-    @MockBean
+    @MockitoBean
     private IZonesAutoriseesDao iZonesAutoriseesDao;
 
     @Test
@@ -67,3 +67,4 @@ class ReferenceServiceTest {
 
     }
 }
+

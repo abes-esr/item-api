@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -54,8 +55,8 @@ public interface IDemandeRecouvDao extends JpaRepository<DemandeRecouv, Integer>
     @Query("select d from DemandeRecouv d where d.etatDemande.numEtat = 9 and (day(current_date) - day(d.dateModification)) > 90 order by d.dateModification asc")
     List<DemandeRecouv> getNextDemandeToPlaceInDeletedStatus();
 
-    @Query("select d from DemandeRecouv d where d.etatDemande.numEtat = 10 and (day(current_date) - day(d.dateModification)) > 210 order by d.dateModification asc")
-    List<DemandeRecouv> getNextDemandeToDelete();
+    @Query("select d from DemandeRecouv d where d.etatDemande.numEtat = 10 and d.dateModification < :dateLimite order by d.dateModification asc")
+    List<DemandeRecouv> getNextDemandeToDeleteBefore(@Param("dateLimite") Date dateLimite);
 
     boolean existsDemandeRecouvByEtatDemande_Id(Integer etatDemande);
 }

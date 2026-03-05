@@ -333,7 +333,9 @@ public class DemandeRecouvService extends DemandeService implements IDemandeServ
      */
     @Override
     public List<DemandeRecouv> getDemandesToDelete() {
-        List<DemandeRecouv> listeDemandes = demandeRecouvDao.getNextDemandeToDelete();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -370);
+        List<DemandeRecouv> listeDemandes = demandeRecouvDao.getNextDemandeToDeleteBefore(calendar.getTime());
         if (!listeDemandes.isEmpty())
             return listeDemandes;
         return null;
