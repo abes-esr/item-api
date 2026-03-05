@@ -4,5 +4,5 @@
 LANG=fr_FR.UTF-8
 if [[ $(pgrep -cf "exportStatistiques") = 0 ]];
 then
-    java -XX:MaxRAMPercentage=80 org.springframework.boot.loader.JarLauncher --spring.batch.job.name=exportStatistiques
+    java -XX:MaxRAMPercentage=80 org.springframework.boot.loader.launch.JarLauncher --spring.batch.job.name=exportStatistiques
 fi

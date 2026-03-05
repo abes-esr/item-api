@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -42,8 +43,8 @@ public interface IDemandeSuppDao extends JpaRepository<DemandeSupp, Integer> {
     @Query("select d from DemandeSupp d where d.etatDemande.numEtat = 9 and (day(current_date) - day(d.dateModification)) > 90 order by d.dateModification asc")
     List<DemandeSupp> getNextDemandeToPlaceInDeletedStatus();
 
-    @Query("select d from DemandeSupp d where d.etatDemande.numEtat = 10 and (day(current_date) - day(d.dateModification)) > 210 order by d.dateModification asc")
-    List<DemandeSupp> getNextDemandeToDelete();
+    @Query("select d from DemandeSupp d where d.etatDemande.numEtat = 10 and d.dateModification < :dateLimite order by d.dateModification asc")
+    List<DemandeSupp> getNextDemandeToDeleteBefore(@Param("dateLimite") Date dateLimite);
 
     /**
      * @param numDemande le numéro de la demande

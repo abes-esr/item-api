@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
@@ -44,3 +44,4 @@ public class LigneFichierModif extends LigneFichier implements Serializable, ILi
         this.setTraitee(1);
     }
 }
+

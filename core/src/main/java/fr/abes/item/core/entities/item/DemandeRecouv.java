@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 
@@ -43,3 +43,4 @@ public class DemandeRecouv extends Demande {
         return TYPE_DEMANDE.RECOUV;
     }
 }
+

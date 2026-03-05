@@ -1,14 +1,14 @@
 ###
 # Image pour la compilation
-FROM maven:3-eclipse-temurin-17 as build-image
+FROM maven:3-eclipse-temurin-21 AS build-image
 WORKDIR /build/
 # Installation et configuration de la locale FR
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt -y install locales
 RUN sed -i '/fr_FR.UTF-8/s/^# //g' /etc/locale.gen && \
     locale-gen
-ENV LANG fr_FR.UTF-8
-ENV LANGUAGE fr_FR:fr
-ENV LC_ALL fr_FR.UTF-8
+ENV LANG=fr_FR.UTF-8
+ENV LANGUAGE=fr_FR:fr
+ENV LC_ALL=fr_FR.UTF-8
 
 # On lance la compilation Java
 # On débute par une mise en cache docker des dépendances Java
@@ -34,7 +34,7 @@ RUN mvn --batch-mode \
 #FROM tomcat:9-jdk11 as api-image
 #COPY --from=build-image /build/web/target/*.war /usr/local/tomcat/webapps/ROOT.war
 #CMD [ "catalina.sh", "run" ]
-FROM tomcat:9-jdk17 as api-image
+FROM eclipse-temurin:21-jdk AS api-image
 WORKDIR /app/
 COPY --from=build-image /build/web/target/*.jar /app/item.jar
 ENV TZ=Europe/Paris
@@ -46,21 +46,21 @@ ENTRYPOINT ["java","-jar","/app/item.jar"]
 # Image pour le module batch
 # Remarque: l'image openjdk:11 n'est pas utilisée car nous avons besoin de cronie
 #           qui n'est que disponible sous centos/rockylinux.
-FROM maven:3-eclipse-temurin-17 as batch-builder
-WORKDIR application
+FROM maven:3-eclipse-temurin-21 AS batch-builder
+WORKDIR /application
 ARG JAR_FILE=build/batch/target/*.jar
 COPY --from=build-image ${JAR_FILE} item-batch.jar
 RUN java -Djarmode=layertools -jar item-batch.jar extract
 
 
-FROM rockylinux:8 as batch-image
-WORKDIR scripts
+FROM rockylinux:9 AS batch-image
+WORKDIR /scripts
 #locales fr
 # Les locales fr_FR
 RUN dnf install langpacks-fr glibc-all-langpacks -y
-ENV LANG fr_FR.UTF-8
-ENV LANGUAGE fr_FR:fr
-ENV LC_ALL fr_FR.UTF-8
+ENV LANG=fr_FR.UTF-8
+ENV LANGUAGE=fr_FR:fr
+ENV LC_ALL=fr_FR.UTF-8
 
 # Configuration du fuseau horaire
 # Pour résoudre le problème de décalage horaire dans les logs
@@ -80,14 +80,16 @@ RUN dnf install -y cronie gettext && \
     crond -V && rm -rf /etc/cron.*/*
 COPY ./docker/batch/tasks.tmpl /etc/cron.d/tasks.tmpl
 # Le JAR et le script pour le batch de LN
-RUN dnf install -y java-17-openjdk
+RUN dnf install -y java-21-openjdk
 
 RUN dnf install -y tzdata && \
     ln -fs /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
-    echo "Europe/London" > /etc/timezone
+    echo "Europe/Paris" > /etc/timezone
 
 COPY ./docker/batch/itemBatchArchiverDemandesPlusDeTroisMois.sh /scripts/itemBatchArchiverDemandesPlusDeTroisMois.sh
 RUN chmod +x /scripts/itemBatchArchiverDemandesPlusDeTroisMois.sh
+COPY ./docker/batch/itemBatchDemandesPlusDeTroisMois.sh /scripts/itemBatchDemandesPlusDeTroisMois.sh
+RUN chmod +x /scripts/itemBatchDemandesPlusDeTroisMois.sh
 COPY ./docker/batch/itemBatchExportStatistiques.sh /scripts/itemBatchExportStatistiques.sh
 RUN chmod +x /scripts/itemBatchExportStatistiques.sh
 COPY ./docker/batch/itemBatchStatutSupprimeDemandesPlusDeTroisMois.sh /scripts/itemBatchStatutSupprimeDemandesPlusDeTroisMois.sh

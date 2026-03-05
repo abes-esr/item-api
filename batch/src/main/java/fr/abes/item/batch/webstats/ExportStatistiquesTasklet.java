@@ -53,7 +53,7 @@ public class ExportStatistiquesTasklet implements Tasklet, StepExecutionListener
     }
 
     private void exportStatistiquesDemandesModif() {
-        try (CSVWriter writer = new CSVWriter(new FileWriter(getFilename(Constant.STAT_NBDEMANDESMODIFTRAITEES_FILENAME)), ';', CSVWriter.NO_QUOTE_CHARACTER)){
+        try (CSVWriter writer = new CSVWriter(new FileWriter(getFilename(Constant.STAT_NBDEMANDESMODIFTRAITEES_FILENAME)), ';', CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)){
             List<NbDemandesTraiteesDto> listeDemandesTraitees = getNbDemandesTraiteesModif(dateDebut, dateFin);
             for (NbDemandesTraiteesDto demande : listeDemandesTraitees) {
                 writer.writeNext(new String[]{demande.getRcr(), demande.getNbDemandesTraitees().toString()});
@@ -61,7 +61,7 @@ public class ExportStatistiquesTasklet implements Tasklet, StepExecutionListener
         } catch (Exception e) {
             log.error(Constant.ERR_FILE_STAT_MODIF_DEMANDES);
         }
-        try (CSVWriter writer = new CSVWriter(new FileWriter(getFilename(Constant.STAT_NBEXEMPLAIRESMODIFTRAITES_FILENAME)), ';', CSVWriter.NO_QUOTE_CHARACTER)) {
+        try (CSVWriter writer = new CSVWriter(new FileWriter(getFilename(Constant.STAT_NBEXEMPLAIRESMODIFTRAITES_FILENAME)), ';', CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
             List<NbExemplairesTraitesDto> listeExemplairesTraites = getNbExemplairesTraitesModif(dateDebut, dateFin);
             for (NbExemplairesTraitesDto exemp : listeExemplairesTraites) {
                 writer.writeNext(new String[]{exemp.getRcr(), exemp.getTypeTraitement().toString(), exemp.getNbExemplaires().toString()});
@@ -72,7 +72,7 @@ public class ExportStatistiquesTasklet implements Tasklet, StepExecutionListener
     }
 
     private void exportStatistiquesDemandesSupp() {
-        try (CSVWriter writer = new CSVWriter(new FileWriter(getFilename(Constant.STAT_NBDEMANDESSUPPTRAITEES_FILENAME)), ';', CSVWriter.NO_QUOTE_CHARACTER)){
+        try (CSVWriter writer = new CSVWriter(new FileWriter(getFilename(Constant.STAT_NBDEMANDESSUPPTRAITEES_FILENAME)), ';', CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)){
             List<NbDemandesTraiteesDto> listeDemandesTraitees = getNbDemandesTraiteesSupp(dateDebut, dateFin);
             for (NbDemandesTraiteesDto demande : listeDemandesTraitees) {
                 writer.writeNext(new String[]{demande.getRcr(), demande.getNbDemandesTraitees().toString()});
@@ -80,7 +80,7 @@ public class ExportStatistiquesTasklet implements Tasklet, StepExecutionListener
         } catch (Exception e) {
             log.error(Constant.ERR_FILE_STAT_SUPP_DEMANDES);
         }
-        try (CSVWriter writer = new CSVWriter(new FileWriter(getFilename(Constant.STAT_NBEXEMPLAIRESSUPPTRAITES_FILENAME)), ';', CSVWriter.NO_QUOTE_CHARACTER)) {
+        try (CSVWriter writer = new CSVWriter(new FileWriter(getFilename(Constant.STAT_NBEXEMPLAIRESSUPPTRAITES_FILENAME)), ';', CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
             List<NbExemplairesSuppTraitesDto> listeExemplairesTraites = getNbExemplairesTraitesSupp(dateDebut, dateFin);
             for (NbExemplairesSuppTraitesDto exemp : listeExemplairesTraites) {
                 writer.writeNext(new String[]{exemp.getRcr(), exemp.getNbExemplaires().toString()});

@@ -2,7 +2,12 @@ package fr.abes.item.security;
 
 
 import fr.abes.item.core.constant.Constant;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +15,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.crypto.SecretKey;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.nio.charset.StandardCharsets;
+import io.jsonwebtoken.security.Keys;
 
 @Component
 @Slf4j
@@ -29,9 +37,9 @@ public class JwtTokenProvider {
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
         return Jwts.builder()
-                .setSubject(u.getUserKey())// USER_KEY de la base
-                .setIssuedAt(new Date())
-                .setExpiration(expiryDate)
+                .subject(u.getUserKey()) // USER_KEY de la base
+                .issuedAt(new Date())
+                .expiration(expiryDate)
                 .claim("userNum", u.getUserNum())
                 .claim("iln", u.getIln())
                 .claim("library", u.getLibrary())
@@ -40,13 +48,13 @@ public class JwtTokenProvider {
                 .claim("role", u.getRole())
                 .claim("shortName", u.getShortName())
                 .claim("userGroup", u.getUserGroup())
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(getSigningKey(), Jwts.SIG.HS512)
                 .compact();
     }
 
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+            Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(authToken);
             return true;
         } catch (SignatureException ex) {
             log.error(Constant.JWT_SIGNATURE_INVALID, ex.getMessage());
@@ -71,9 +79,10 @@ public class JwtTokenProvider {
 
     public User getUtilisateurFromJwt(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
 
         User u = new User();
         u.setUserNum(claims.get("userNum").toString());
@@ -86,5 +95,9 @@ public class JwtTokenProvider {
         u.setUserGroup(claims.get("userGroup").toString());
         u.setAuthorities(Collections.singleton(new SimpleGrantedAuthority(u.getRole())));
         return u;
+    }
+
+    private SecretKey getSigningKey() {
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 }

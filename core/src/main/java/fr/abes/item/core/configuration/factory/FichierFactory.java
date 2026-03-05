@@ -6,7 +6,7 @@ import fr.abes.item.core.constant.TYPE_DEMANDE;
 import fr.abes.item.core.exception.FileTypeException;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

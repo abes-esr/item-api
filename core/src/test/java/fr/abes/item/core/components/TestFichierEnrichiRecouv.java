@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -30,7 +30,7 @@ public class TestFichierEnrichiRecouv {
     @Autowired
     private FichierEnrichiRecouv composantFichier;
 
-    @MockBean
+    @MockitoBean
     private IIndexRechercheDao indexRechercheDao;
 
     private DemandeRecouv demande;
@@ -96,3 +96,4 @@ public class TestFichierEnrichiRecouv {
     }
 
 }
+
