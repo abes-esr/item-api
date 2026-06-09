@@ -27,12 +27,22 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: "Prepare API Docker tags"
-        id: docker_tag_meta
+        id: api_docker_tag_meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.DOCKERHUB_IMAGE_PREFIX }}
           flavor: |
             latest=auto
+            suffix=-api
+
+      - name: "Prepare Batch Docker tags"
+        id: batch_docker_tag_meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKERHUB_IMAGE_PREFIX }}
+          flavor: |
+            latest=auto
+            suffix=-batch
 
       - name: "Login to DockerHub"
         uses: docker/login-action@v3
@@ -46,7 +56,7 @@ jobs:
         with:
           push: true
           target: api-image
-          tags: ${{ steps.docker_tag_meta.outputs.tags }}-api
+          tags: ${{ steps.api_docker_tag_meta.outputs.tags }}
 
       - name: "Buildx and push Batch"
         id: push-batch
@@ -54,4 +64,4 @@ jobs:
         with:
           push: true
           target: batch-image
-          tags: ${{ steps.docker_tag_meta.outputs.tags }}-batch
+          tags: ${{ steps.batch_docker_tag_meta.outputs.tags }}
