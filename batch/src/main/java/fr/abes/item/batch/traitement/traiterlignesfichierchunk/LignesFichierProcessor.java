@@ -179,11 +179,13 @@ public class LignesFichierProcessor implements ItemProcessor<LigneFichierDto, Li
                 }
                 if (ligneFichierDtoSupp.getEpn() != null) {
                     Optional<Exemplaire> exemplaireASupprimerOpt = exemplaireWithType.getExemplaires().stream().filter(exemplaire -> exemplaire.findZone("A99", 0).getValeur().equals(ligneFichierDtoSupp.getEpn())).findFirst();
-                    if (exemplaireASupprimerOpt.isPresent()) {
-                        //Type de document non présent dans le fichier de sauvegarde txt, seulement dans le csv
-                        this.fichierSauvegardeSuppTxt.writePpnInFile(ligneFichierDtoSupp.getPpn(), exemplaireASupprimerOpt.get());
-                        this.fichierSauvegardeSuppcsv.writePpnInFile(ligneFichierDtoSupp.getPpn(), exemplaireASupprimerOpt.get(), exemplaireWithType.getType());
+                    if (exemplaireASupprimerOpt.isEmpty()) {
+                        ligneFichierDtoSupp.setRetourSudoc(Constant.ERR_FILE_EPN_INEXISTANT_OR_ERRONE);
+                        return ligneFichierDtoSupp;
                     }
+                    //Type de document non présent dans le fichier de sauvegarde txt, seulement dans le csv
+                    this.fichierSauvegardeSuppTxt.writePpnInFile(ligneFichierDtoSupp.getPpn(), exemplaireASupprimerOpt.get());
+                    this.fichierSauvegardeSuppcsv.writePpnInFile(ligneFichierDtoSupp.getPpn(), exemplaireASupprimerOpt.get(), exemplaireWithType.getType());
                     //supprimer l'exemplaire
                     this.proxyRetry.deleteExemplaire(demandeSupp, ligneFichierDtoSupp);
                     ligneFichierDtoSupp.setRetourSudoc(Constant.EXEMPLAIRE_SUPPRIME);
