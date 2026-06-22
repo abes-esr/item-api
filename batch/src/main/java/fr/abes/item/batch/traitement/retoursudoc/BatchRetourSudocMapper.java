@@ -3,6 +3,7 @@ package fr.abes.item.batch.traitement.retoursudoc;
 import fr.abes.item.batch.traitement.model.LigneFichierDto;
 import fr.abes.item.batch.traitement.model.LigneFichierDtoSupp;
 import fr.abes.item.core.constant.Constant;
+import fr.abes.item.core.constant.TYPE_DEMANDE;
 import fr.abes.item.core.constant.TYPE_SUPPRESSION;
 import fr.abes.item.core.entities.item.Demande;
 import fr.abes.item.core.entities.item.DemandeSupp;
@@ -31,6 +32,10 @@ public class BatchRetourSudocMapper {
             Demande demande,
             LigneFichierDto ligneFichierDto
     ) {
+        if (demande.getTypeDemande() == TYPE_DEMANDE.RECOUV
+                && Constant.ERR_FILE_SEARCH_INDEX_CODE_NOT_COMPLIANT.equals(exception.getMessage())) {
+            return Constant.ERR_FILE_SEARCH_INDEX_NOT_COMPLIANT;
+        }
         if (demande instanceof DemandeSupp demandeSupp
                 && ligneFichierDto instanceof LigneFichierDtoSupp ligneFichierDtoSupp
                 && hasExplicitSuppressionEpnMappingContext(demandeSupp, ligneFichierDtoSupp)
