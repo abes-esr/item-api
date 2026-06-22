@@ -7,6 +7,7 @@ import fr.abes.cbs.notices.Exemplaire;
 import fr.abes.cbs.notices.Zone;
 import fr.abes.item.batch.traitement.ProxyRetry;
 import fr.abes.item.batch.traitement.model.*;
+import fr.abes.item.batch.traitement.retoursudoc.BatchRetourSudocMapper;
 import fr.abes.item.core.components.FichierSauvegardeSuppCsv;
 import fr.abes.item.core.components.FichierSauvegardeSuppTxt;
 import fr.abes.item.core.configuration.factory.StrategyFactory;
@@ -45,6 +46,7 @@ public class LignesFichierProcessor implements ItemProcessor<LigneFichierDto, Li
     private final StrategyFactory strategyFactory;
     private final ProxyRetry proxyRetry;
     private final ReferenceService referenceService;
+    private final BatchRetourSudocMapper batchRetourSudocMapper;
     private FichierSauvegardeSuppTxt fichierSauvegardeSuppTxt;
     private FichierSauvegardeSuppCsv fichierSauvegardeSuppcsv;
 
@@ -52,10 +54,16 @@ public class LignesFichierProcessor implements ItemProcessor<LigneFichierDto, Li
     private Integer demandeId;
     private IDemandeService demandeService;
 
-    public LignesFichierProcessor(StrategyFactory strategyFactory, ProxyRetry proxyRetry, ReferenceService referenceService) {
+    public LignesFichierProcessor(
+            StrategyFactory strategyFactory,
+            ProxyRetry proxyRetry,
+            ReferenceService referenceService,
+            BatchRetourSudocMapper batchRetourSudocMapper
+    ) {
         this.strategyFactory = strategyFactory;
         this.proxyRetry = proxyRetry;
         this.referenceService = referenceService;
+        this.batchRetourSudocMapper = batchRetourSudocMapper;
     }
 
 
@@ -97,7 +105,7 @@ public class LignesFichierProcessor implements ItemProcessor<LigneFichierDto, Li
             };
         } catch (CBSException | ZoneException | QueryToSudocException | IOException e) {
             log.error(Constant.ERROR_FROM_SUDOC_REQUEST_OR_METHOD_SAVEXEMPLAIRE + e);
-            ligneFichierDto.setRetourSudoc(e.getMessage());
+            ligneFichierDto.setRetourSudoc(batchRetourSudocMapper.map(e, this.demande, ligneFichierDto));
         } catch (JDBCConnectionException | ConstraintViolationException j) {
             log.error("Erreur hibernate JDBC");
             log.error(j.toString());
@@ -110,7 +118,7 @@ public class LignesFichierProcessor implements ItemProcessor<LigneFichierDto, Li
             log.error(ex.getMessage());
         } catch (Exception e) {
             log.error(Constant.ERROR_FROM_RECUP_NOTICETRAITEE + e);
-            ligneFichierDto.setRetourSudoc(e.getMessage());
+            ligneFichierDto.setRetourSudoc(batchRetourSudocMapper.map(e, this.demande, ligneFichierDto));
         }
         return ligneFichierDto;
     }
@@ -142,7 +150,7 @@ public class LignesFichierProcessor implements ItemProcessor<LigneFichierDto, Li
      * @throws ZoneException : erreur de construction de la notice
      * @throws IOException   : erreur de communication avec le CBS
      */
-    private LigneFichierDtoExemp processDemandeExemp(LigneFichierDto ligneFichierDto) throws CBSException, ZoneException, IOException {
+    private LigneFichierDtoExemp processDemandeExemp(LigneFichierDto ligneFichierDto) throws CBSException, ZoneException, IOException, QueryToSudocException {
         DemandeExemp demandeExemp = (DemandeExemp) this.demande;
         LigneFichierDtoExemp ligneFichierDtoExemp = (LigneFichierDtoExemp) ligneFichierDto;
         this.proxyRetry.newExemplaire(demandeExemp, ligneFichierDtoExemp);
@@ -165,22 +173,11 @@ public class LignesFichierProcessor implements ItemProcessor<LigneFichierDto, Li
         if(demandeSupp.getEtatDemande().getId() != Constant.ETATDEM_INTERROMPUE) {
                 //récupération des exemplaires existants pour cette ligne
                 LigneFichierSuppService service = ((LigneFichierSuppService) strategyFactory.getStrategy(ILigneFichierService.class, TYPE_DEMANDE.SUPP));
-                ExemplaireWithTypeDto exemplaireWithType;
-                try {
-                    exemplaireWithType = service.getExemplairesAndTypeDoc(ligneFichierDtoSupp.getPpn());
-                } catch (QueryToSudocException ex) {
-                    // EPN suppression case: write explicit message in result file.
-                    if (demandeSupp.getTypeSuppression() == TYPE_SUPPRESSION.EPN
-                            && Constant.ERR_FILE_NOTICE_NOT_FOUND.equals(ex.getMessage())) {
-                        ligneFichierDtoSupp.setRetourSudoc(Constant.ERR_FILE_EPN_INEXISTANT_OR_ERRONE);
-                        return ligneFichierDtoSupp;
-                    }
-                    throw ex;
-                }
+                ExemplaireWithTypeDto exemplaireWithType = service.getExemplairesAndTypeDoc(ligneFichierDtoSupp.getPpn());
                 if (ligneFichierDtoSupp.getEpn() != null) {
                     Optional<Exemplaire> exemplaireASupprimerOpt = exemplaireWithType.getExemplaires().stream().filter(exemplaire -> exemplaire.findZone("A99", 0).getValeur().equals(ligneFichierDtoSupp.getEpn())).findFirst();
                     if (exemplaireASupprimerOpt.isEmpty()) {
-                        ligneFichierDtoSupp.setRetourSudoc(Constant.ERR_FILE_EPN_INEXISTANT_OR_ERRONE);
+                        ligneFichierDtoSupp.setRetourSudoc(batchRetourSudocMapper.mapMissingSuppressionEpn(demandeSupp, ligneFichierDtoSupp));
                         return ligneFichierDtoSupp;
                     }
                     //Type de document non présent dans le fichier de sauvegarde txt, seulement dans le csv

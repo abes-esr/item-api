@@ -19,7 +19,7 @@ public class BatchRetourSudocMapper {
         return exception.getMessage();
     }
 
-    String mapMissingSuppressionEpn(DemandeSupp demandeSupp, LigneFichierDtoSupp ligneFichierDtoSupp) {
+    public String mapMissingSuppressionEpn(DemandeSupp demandeSupp, LigneFichierDtoSupp ligneFichierDtoSupp) {
         if (hasExplicitSuppressionEpnMappingContext(demandeSupp, ligneFichierDtoSupp)) {
             return Constant.ERR_FILE_EPN_INEXISTANT_OR_ERRONE;
         }

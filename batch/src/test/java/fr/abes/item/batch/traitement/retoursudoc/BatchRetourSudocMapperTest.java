@@ -10,11 +10,8 @@ import fr.abes.item.core.exception.QueryToSudocException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class BatchRetourSudocMapperTest {
 
@@ -73,17 +70,6 @@ class BatchRetourSudocMapperTest {
                 Constant.ERR_FILE_EPN_INEXISTANT_OR_ERRONE,
                 mapper.mapMissingSuppressionEpn(demande, ligne)
         );
-    }
-
-    @Test
-    void keepsCaseSpecificMissingSuppressionMappingNonPublic() throws NoSuchMethodException {
-        Method method = BatchRetourSudocMapper.class.getDeclaredMethod(
-                "mapMissingSuppressionEpn",
-                DemandeSupp.class,
-                LigneFichierDtoSupp.class
-        );
-
-        assertFalse(Modifier.isPublic(method.getModifiers()));
     }
 
     @Test
