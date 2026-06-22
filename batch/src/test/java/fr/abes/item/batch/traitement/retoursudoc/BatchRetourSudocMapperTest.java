@@ -10,8 +10,11 @@ import fr.abes.item.core.exception.QueryToSudocException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class BatchRetourSudocMapperTest {
 
@@ -68,6 +71,64 @@ class BatchRetourSudocMapperTest {
 
         assertEquals(
                 Constant.ERR_FILE_EPN_INEXISTANT_OR_ERRONE,
+                mapper.mapMissingSuppressionEpn(demande, ligne)
+        );
+    }
+
+    @Test
+    void keepsCaseSpecificMissingSuppressionMappingNonPublic() throws NoSuchMethodException {
+        Method method = BatchRetourSudocMapper.class.getDeclaredMethod(
+                "mapMissingSuppressionEpn",
+                DemandeSupp.class,
+                LigneFichierDtoSupp.class
+        );
+
+        assertFalse(Modifier.isPublic(method.getModifiers()));
+    }
+
+    @Test
+    void doesNotMapSuppressionPpnNoticeNotFoundToExplicitEpnMessage() {
+        DemandeSupp demande = new DemandeSupp(1);
+        demande.setTypeSuppression(TYPE_SUPPRESSION.PPN);
+
+        LigneFichierDtoSupp ligne = new LigneFichierDtoSupp();
+        ligne.setEpn("987654321");
+
+        String result = mapper.map(
+                new QueryToSudocException(Constant.ERR_FILE_NOTICE_NOT_FOUND),
+                demande,
+                ligne
+        );
+
+        assertEquals(Constant.ERR_FILE_NOTICE_NOT_FOUND, result);
+    }
+
+    @Test
+    void doesNotMapSuppressionWithoutEpnToExplicitEpnMessage() {
+        DemandeSupp demande = new DemandeSupp(1);
+        demande.setTypeSuppression(TYPE_SUPPRESSION.EPN);
+
+        LigneFichierDtoSupp ligne = new LigneFichierDtoSupp();
+
+        String result = mapper.map(
+                new QueryToSudocException(Constant.ERR_FILE_NOTICE_NOT_FOUND),
+                demande,
+                ligne
+        );
+
+        assertEquals(Constant.ERR_FILE_NOTICE_NOT_FOUND, result);
+    }
+
+    @Test
+    void keepsGenericWarningForMissingSuppressionFallbackCase() {
+        DemandeSupp demande = new DemandeSupp(1);
+        demande.setTypeSuppression(TYPE_SUPPRESSION.PPN);
+
+        LigneFichierDtoSupp ligne = new LigneFichierDtoSupp();
+        ligne.setEpn("987654321");
+
+        assertEquals(
+                Constant.WARN_NOTICE_EPN_INEXISTANT,
                 mapper.mapMissingSuppressionEpn(demande, ligne)
         );
     }

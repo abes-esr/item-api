@@ -19,8 +19,8 @@ public class BatchRetourSudocMapper {
         return exception.getMessage();
     }
 
-    public String mapMissingSuppressionEpn(DemandeSupp demandeSupp, LigneFichierDtoSupp ligneFichierDtoSupp) {
-        if (demandeSupp.getTypeSuppression() == TYPE_SUPPRESSION.EPN && ligneFichierDtoSupp.getEpn() != null) {
+    String mapMissingSuppressionEpn(DemandeSupp demandeSupp, LigneFichierDtoSupp ligneFichierDtoSupp) {
+        if (hasExplicitSuppressionEpnMappingContext(demandeSupp, ligneFichierDtoSupp)) {
             return Constant.ERR_FILE_EPN_INEXISTANT_OR_ERRONE;
         }
         return Constant.WARN_NOTICE_EPN_INEXISTANT;
@@ -32,12 +32,19 @@ public class BatchRetourSudocMapper {
             LigneFichierDto ligneFichierDto
     ) {
         if (demande instanceof DemandeSupp demandeSupp
-                && demandeSupp.getTypeSuppression() == TYPE_SUPPRESSION.EPN
                 && ligneFichierDto instanceof LigneFichierDtoSupp ligneFichierDtoSupp
-                && ligneFichierDtoSupp.getEpn() != null
+                && hasExplicitSuppressionEpnMappingContext(demandeSupp, ligneFichierDtoSupp)
                 && Constant.ERR_FILE_NOTICE_NOT_FOUND.equals(exception.getMessage())) {
             return Constant.ERR_FILE_EPN_INEXISTANT_OR_ERRONE;
         }
         return exception.getMessage();
+    }
+
+    private boolean hasExplicitSuppressionEpnMappingContext(
+            DemandeSupp demandeSupp,
+            LigneFichierDtoSupp ligneFichierDtoSupp
+    ) {
+        return demandeSupp.getTypeSuppression() == TYPE_SUPPRESSION.EPN
+                && ligneFichierDtoSupp.getEpn() != null;
     }
 }
