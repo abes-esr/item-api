@@ -104,7 +104,7 @@ public class LignesFichierProcessor implements ItemProcessor<LigneFichierDto, Li
                 default -> processDemandeRecouv(ligneFichierDto);
             };
         } catch (CBSException | ZoneException | QueryToSudocException | IOException e) {
-            log.error(Constant.ERROR_FROM_SUDOC_REQUEST_OR_METHOD_SAVEXEMPLAIRE + e);
+            log.error(Constant.ERROR_FROM_SUDOC_REQUEST_OR_METHOD_SAVEXEMPLAIRE, e);
             ligneFichierDto.setRetourSudoc(batchRetourSudocMapper.map(e, this.demande, ligneFichierDto));
         } catch (JDBCConnectionException | ConstraintViolationException j) {
             log.error("Erreur hibernate JDBC");
@@ -117,7 +117,7 @@ public class LignesFichierProcessor implements ItemProcessor<LigneFichierDto, Li
         } catch (StorageException ex) {
             log.error(ex.getMessage());
         } catch (Exception e) {
-            log.error(Constant.ERROR_FROM_RECUP_NOTICETRAITEE + e);
+            log.error(Constant.ERROR_FROM_RECUP_NOTICETRAITEE, e);
             ligneFichierDto.setRetourSudoc(batchRetourSudocMapper.map(e, this.demande, ligneFichierDto));
         }
         return ligneFichierDto;
@@ -188,7 +188,7 @@ public class LignesFichierProcessor implements ItemProcessor<LigneFichierDto, Li
                     ligneFichierDtoSupp.setRetourSudoc(Constant.EXEMPLAIRE_SUPPRIME);
                 } else {
                     //si pas d'epn dans la ligne du fichier, on ne fait pas le traitement et on écrit directement le message dans le retour sudoc pour le fichier résultat
-                    ligneFichierDtoSupp.setRetourSudoc("Exemplaire inexistant");
+                    ligneFichierDtoSupp.setRetourSudoc(batchRetourSudocMapper.mapMissingSuppressionEpn(demandeSupp, ligneFichierDtoSupp));
                 }
         }
         return ligneFichierDtoSupp;
