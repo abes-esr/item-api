@@ -98,10 +98,11 @@ public class ProxyRetry {
      * @throws CBSException : erreur CBS
      * @throws ZoneException : erreur de construction de la notice
      * @throws IOException : erreur de communication avec le CBS
+     * @throws QueryToSudocException : erreur sur la requête Sudoc
      */
     @Retryable(maxAttempts = 4, retryFor = IOException.class,
-            noRetryFor = {CBSException.class, ZoneException.class}, backoff = @Backoff(delay = 1000, multiplier = 2) )
-    public void newExemplaire(DemandeExemp demande, LigneFichierDtoExemp ligneFichierDtoExemp) throws CBSException, ZoneException, IOException {
+            noRetryFor = {CBSException.class, ZoneException.class, QueryToSudocException.class}, backoff = @Backoff(delay = 1000, multiplier = 2) )
+    public void newExemplaire(DemandeExemp demande, LigneFichierDtoExemp ligneFichierDtoExemp) throws CBSException, ZoneException, IOException, QueryToSudocException {
         try {
             ligneFichierDtoExemp.setRequete(ligneFichierExempService.getQueryToSudoc(demande.getIndexRecherche().getCode(), demande.getTypeExemp().getNumTypeExemp(), ligneFichierDtoExemp.getIndexRecherche().split(";")));
             //lancement de la requête de récupération de la notice dans le CBS
@@ -133,7 +134,7 @@ public class ProxyRetry {
         } catch (QueryToSudocException e) {
             ligneFichierDtoExemp.setNbReponses(ligneFichierExempService.getNbReponses());
             ligneFichierDtoExemp.setListePpn(traitementService.getCbs().getListePpn().toString().replace(';', ','));
-            ligneFichierDtoExemp.setRetourSudoc("");
+            throw e;
         } catch (DataAccessException d) {
             if (d.getRootCause() instanceof SQLException sqlEx) {
                 log.error("Erreur SQL : {}", sqlEx.getErrorCode());
