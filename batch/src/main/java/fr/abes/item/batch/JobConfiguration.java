@@ -5,6 +5,7 @@ import fr.abes.item.batch.traitement.model.LigneFichierDto;
 import fr.abes.item.batch.traitement.model.LigneFichierDtoExemp;
 import fr.abes.item.batch.traitement.model.LigneFichierDtoModif;
 import fr.abes.item.batch.traitement.model.LigneFichierDtoRecouv;
+import fr.abes.item.batch.traitement.retoursudoc.BatchRetourSudocMapper;
 import fr.abes.item.batch.traitement.traiterlignesfichierchunk.LignesFichierProcessor;
 import fr.abes.item.batch.traitement.traiterlignesfichierchunk.LignesFichierReader;
 import fr.abes.item.batch.traitement.traiterlignesfichierchunk.LignesFichierWriter;
@@ -58,6 +59,7 @@ public class JobConfiguration {
     private final StrategyFactory strategyFactory;
     private final ProxyRetry proxyRetry;
     private final ReferenceService referenceService;
+    private final BatchRetourSudocMapper batchRetourSudocMapper;
     private final JdbcTemplate jdbcTemplate;
     private final ApplicationArguments applicationArguments;
 
@@ -79,10 +81,11 @@ public class JobConfiguration {
     private Integer nbPpnInFileResult;
 
 
-    public JobConfiguration(StrategyFactory strategyFactory, ProxyRetry proxyRetry, ReferenceService referenceService, @Qualifier("itemJdbcTemplate") JdbcTemplate jdbcTemplate, ApplicationArguments applicationArguments) {
+    public JobConfiguration(StrategyFactory strategyFactory, ProxyRetry proxyRetry, ReferenceService referenceService, BatchRetourSudocMapper batchRetourSudocMapper, @Qualifier("itemJdbcTemplate") JdbcTemplate jdbcTemplate, ApplicationArguments applicationArguments) {
         this.strategyFactory = strategyFactory;
         this.proxyRetry = proxyRetry;
         this.referenceService = referenceService;
+        this.batchRetourSudocMapper = batchRetourSudocMapper;
         this.jdbcTemplate = jdbcTemplate;
         this.applicationArguments = applicationArguments;
     }
@@ -101,7 +104,7 @@ public class JobConfiguration {
     @Bean
     @StepScope
     public LignesFichierProcessor processor() {
-        return new LignesFichierProcessor(strategyFactory, proxyRetry, this.referenceService);
+        return new LignesFichierProcessor(strategyFactory, proxyRetry, this.referenceService, batchRetourSudocMapper);
     }
 
     @Bean
