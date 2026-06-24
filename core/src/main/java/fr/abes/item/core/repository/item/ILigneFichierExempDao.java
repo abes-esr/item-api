@@ -48,7 +48,7 @@ public interface ILigneFichierExempDao extends JpaRepository<LigneFichierExemp, 
      * @return Une liste contenant toutes les lignes d'exemplaires correspondant à une demande
      *          qui n'ont pas été traités (= absence d'echec sur le traitement de ces lignes)
      */
-    @Query("select count(lf) from LigneFichierExemp lf where lf.demandeExemp.numDemande = :numDemande and lf.traitee=1 order by lf.position")
+    @Query("select count(lf) from LigneFichierExemp lf where lf.demandeExemp.numDemande = :numDemande and lf.traitee=0")
     int getNbLigneFichierNonTraitee(@Param("numDemande") Integer numDemande);
 
     /**
@@ -82,13 +82,13 @@ public interface ILigneFichierExempDao extends JpaRepository<LigneFichierExemp, 
     @Query("select count(lf) from LigneFichierExemp lf where lf.demandeExemp.numDemande = :numDemande and lf.traitee = 1 and lf.nbReponse != 0")
     int getNbReponseTrouveesByDemande(@Param("numDemande") Integer numDemande);
 
-    @Query("select count(lf) from LigneFichierExemp lf where lf.demandeExemp.numDemande = :numDemande and lf.nbReponse=1")
+    @Query("select count(lf) from LigneFichierExemp lf where lf.demandeExemp.numDemande = :numDemande and lf.traitee = 1 and lf.nbReponse=1")
     int getNbUneReponseByDemande(@Param("numDemande") Integer numDemande);
 
-    @Query("select count(lf) from LigneFichierExemp lf where lf.demandeExemp.numDemande = :numDemande and lf.nbReponse=0")
+    @Query("select count(lf) from LigneFichierExemp lf where lf.demandeExemp.numDemande = :numDemande and lf.traitee = 1 and lf.nbReponse=0")
     int getNbZeroReponseByDemande(@Param("numDemande") Integer numDemande);
 
-    @Query("select count(lf) from LigneFichierExemp lf where lf.demandeExemp.numDemande = :numDemande and lf.nbReponse>1")
+    @Query("select count(lf) from LigneFichierExemp lf where lf.demandeExemp.numDemande = :numDemande and lf.traitee = 1 and lf.nbReponse>1")
     int getNbReponseMultipleByDemande(@Param("numDemande") Integer numDemande);
 
     /**Supprime les lignes de fichier d'exemplaire associées à une demande
