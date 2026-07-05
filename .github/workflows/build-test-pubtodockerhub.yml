@@ -23,10 +23,18 @@ jobs:
 
 
       - name: "Build: checkout source code"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: "Build: build docker image"
         run: |
           docker build . -t localimage:latest
+      - name: "Security: Trivy scan (api-image)"
+        uses: aquasecurity/trivy-action@0.29.0
+        with:
+          image-ref: 'localimage:latest'
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: true
       - name: "Push: prepare version from git tags/branchs"
         id: docker_tag_meta
         uses: docker/metadata-action@v5
